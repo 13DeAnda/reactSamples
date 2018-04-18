@@ -1,0 +1,25 @@
+
+.WordScramble{
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+.letterBox{
+  height: 40px;
+  width: 40px;
+  display: inline;
+  padding: 18px;
+  margin: 15px;
+  border-radius: 5px;
+  background-color: beige;
+}
+
+.scrambledWordContainer{
+  margin-top: 30px;
+}
+.text-center{
+  text-align: center;
+}
+
+.foundLetter{
+  background: green;
+}

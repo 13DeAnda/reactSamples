@@ -2,9 +2,10 @@ import React from 'react';
 import axios from 'axios';
 import _ from 'lodash';
 import './WorldScramble.css';
-import { Grid, Col, Row } from 'react-bootstrap';
+import { Grid, Row } from 'react-bootstrap';
 
 class WordScramble extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -12,6 +13,7 @@ class WordScramble extends React.Component {
       scrambledWord: "",
       scrambledWordObj: [],
       scrambledWordObjCopy: [],
+      usedLetters: [],
       correctWord: "",
       score: 0
     };
@@ -29,19 +31,20 @@ class WordScramble extends React.Component {
   scrambleText = (word) =>{
     var scrambledWord = "";
     var usedIndex = {};
-    this.state.scrambledWordObj = [];
+    var scrambledWordTemp = [];
 
     while(scrambledWord.length !== word.length){
       var randomIndex = Math.floor(Math.random() * word.length) + 0;
       if(!usedIndex[randomIndex]){
         usedIndex[randomIndex] = true;
         scrambledWord += word[randomIndex];
-        this.state.scrambledWordObj.push({letter: word[randomIndex], used: false})
+        scrambledWordTemp.push({letter: word[randomIndex], used: false})
       }
     }
     this.setState({scrambledWord: scrambledWord, 
                    correctWord: word, 
-                   scrambledWordObjCopy: this.state.scrambledWordObj});
+                   scrambledWordObjCopy: scrambledWordTemp,
+                   scrambledWordObj: scrambledWordTemp});
   }
 
   onChange = (e) => {
@@ -50,37 +53,42 @@ class WordScramble extends React.Component {
   }
 
   checkForLetter = (newText) => {
-    this.state.scrambledWordObj = _.cloneDeep(this.state.scrambledWordObjCopy);
-    var that = this;
+    var inWordText = "";
+    var usedLetters = [];
+    var scrambledWordObjTemp = _.cloneDeep(this.state.scrambledWordObjCopy);
     _.forEach(newText, function(letter){
-      _.forEach(that.state.scrambledWordObj, function(item){
+
+      _.forEach(scrambledWordObjTemp, function(item){
         if(!item.used && item.letter === letter){
           item.used = true;
+          usedLetters.push({letter: item.letter});
+          inWordText += item.letter;
           return false
         }
       });     
     });
-
-    this.setState({userWord: newText});
+    this.setState({userWord: inWordText, usedLetters: usedLetters, scrambledWordObj: scrambledWordObjTemp});
     this.checkIfCorrect(newText);
   }
 
   checkIfCorrect = (newText) =>{
-
     if(newText === this.state.correctWord){
-      this.setState({score: this.state.score++, message: "correct!"});
+      var score = _.cloneDeep(this.state.score);
+      this.setState({score: ++score, message: "correct!"});
       setTimeout(function() { 
+        this.setState({message: "", usedLetters: [], userWord: ""});
+        this.getWord();
         console.log("the timeout ended");
-      }.bind(this), 6000);
+      }.bind(this), 1000);
     }
     else if(newText.length >= this.state.correctWord){
       this.setState({message: "Incorrect"});
     }
   }
   render() {
-    {this.state.scrambledWord.length === 0? this.getWord() : null};
     return (
       <Grid className="container-fluid WordScramble">
+        {this.state.scrambledWord.length === 0? this.getWord() : null};
         <Row className="text-center">
           {this.state.message} score:: {this.state.score}
         </Row>
@@ -91,8 +99,12 @@ class WordScramble extends React.Component {
           <input type="text" value={this.state.userWord} onChange={this.onChange}/>
         </Row>
        <Row className="scrambledWordContainer text-center">
+          {this.state.usedLetters.map(function(item, index){
+            return <div className ='letterBox foundLetter' key={index}>{item.letter} </div>
+          })}
+
           {this.state.scrambledWordObj.map(function(item, index){
-            return <div className = {item.used? 'letterBox foundLetter' : 'letterBox'} key={index}>{item.letter} </div>
+            return <div className = {item.used? 'hide' : 'letterBox'} key={index}>{item.letter} </div>
           })}
         </Row>
       </Grid>

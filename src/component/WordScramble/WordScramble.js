@@ -81,22 +81,23 @@ class WordScramble extends React.Component {
         console.log("the timeout ended");
       }.bind(this), 1000);
     }
-    else if(newText.length >= this.state.correctWord){
+    else if(newText.length === this.state.correctWord.length){
+      console.log("the incorrect");
       this.setState({message: "Incorrect"});
     }
   }
+
+
+
   render() {
     return (
       <Grid className="container-fluid WordScramble">
-        {this.state.scrambledWord.length === 0? this.getWord() : null};
-        <Row className="text-center">
-          {this.state.message} score:: {this.state.score}
-        </Row>
-        <Row className="text-center">
-            <button onClick={this.getWord}> Skip Word </button> 
+        {this.state.scrambledWord.length === 0? this.getWord() : null}
+        <Row className="text-rigth">
+            <button className='skipButton' onClick={this.getWord}> Skip Word </button> 
         </Row>
         <Row className="text-center"> 
-          <input type="text" value={this.state.userWord} onChange={this.onChange}/>
+          <input type="text" className='userTextBox' placeholder='Type your word' value={this.state.userWord} onChange={this.onChange}/>
         </Row>
        <Row className="scrambledWordContainer text-center">
           {this.state.usedLetters.map(function(item, index){
@@ -107,6 +108,9 @@ class WordScramble extends React.Component {
             return <div className = {item.used? 'hide' : 'letterBox'} key={index}>{item.letter} </div>
           })}
         </Row>
+          <Row className="text-center score">
+            matches:  {this.state.score}
+          </Row>
       </Grid>
     );
   }

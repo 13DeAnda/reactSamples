@@ -3,6 +3,7 @@ import axios from 'axios';
 import _ from 'lodash';
 import './WorldScramble.css';
 import { Grid, Row } from 'react-bootstrap';
+import ReactInterval from 'react-interval';
 
 class WordScramble extends React.Component {
 
@@ -15,7 +16,9 @@ class WordScramble extends React.Component {
       scrambledWordObjCopy: [],
       usedLetters: [],
       correctWord: "",
-      score: 0
+      score: 0,
+      timerCount: 60,
+      enabled: false
     };
   }
 
@@ -41,10 +44,16 @@ class WordScramble extends React.Component {
         scrambledWordTemp.push({letter: word[randomIndex], used: false})
       }
     }
-    this.setState({scrambledWord: scrambledWord, 
+
+    var toUpdate = {scrambledWord: scrambledWord, 
                    correctWord: word, 
                    scrambledWordObjCopy: scrambledWordTemp,
-                   scrambledWordObj: scrambledWordTemp});
+                   scrambledWordObj: scrambledWordTemp};
+
+    if(!this.state.enabled){
+      toUpdate.enabled = true;
+    }
+    this.setState(toUpdate);
   }
 
   onChange = (e) => {
@@ -78,22 +87,31 @@ class WordScramble extends React.Component {
       setTimeout(function() { 
         this.setState({message: "", usedLetters: [], userWord: ""});
         this.getWord();
-        console.log("the timeout ended");
       }.bind(this), 1000);
     }
     else if(newText.length === this.state.correctWord.length){
-      console.log("the incorrect");
       this.setState({message: "Incorrect"});
     }
   }
 
-
+  interval = () =>{
+    if(this.state.timerCount > 0 ){
+      this.setState({timerCount: this.state.timerCount - 1});
+    }
+    else{
+      this.setState({enabled: false});
+    }
+  }
 
   render() {
     return (
       <Grid className="container-fluid WordScramble">
-        {this.state.scrambledWord.length === 0? this.getWord() : null}
+        {this.state.scrambledWord.length === 0 && !this.state.enabled? this.getWord() : null}
         <Row className="text-rigth">
+            <div className='counterContainer'>
+              Time left: {this.state.timerCount}
+              <ReactInterval timeout={1000} enabled={this.state.enabled} callback={this.interval} />
+            </div>
             <button className='skipButton' onClick={this.getWord}> Skip Word </button> 
         </Row>
         <Row className="text-center"> 
@@ -108,9 +126,9 @@ class WordScramble extends React.Component {
             return <div className = {item.used? 'hide' : 'letterBox'} key={index}>{item.letter} </div>
           })}
         </Row>
-          <Row className="text-center score">
-            matches:  {this.state.score}
-          </Row>
+        <Row className="text-center score">
+          matches:  {this.state.score}
+        </Row>
       </Grid>
     );
   }

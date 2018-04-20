@@ -40,6 +40,18 @@
   border-radius: 5px;
   margin-right: 24px;
 }
+.restartButton{
+  font-size: 17px;
+  font-weight: normal;
+  text-shadow: none;
+  color: white;
+  background: #5a7d55;
+  padding: 5px;
+  border-radius: 5px;
+  margin-right: 24px;
+}
+
+
 .score{
   font-size: 20px;
   color: #1e651e;
@@ -71,4 +83,7 @@
   font-size: 20px;
   color: red;
   text-align: center;
+}
+.modal-content{
+  margin-top: 50% !important;
 }

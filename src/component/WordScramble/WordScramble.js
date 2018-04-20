@@ -2,9 +2,8 @@ import React from 'react';
 import axios from 'axios';
 import _ from 'lodash';
 import './WorldScramble.css';
-import { Grid, Row } from 'react-bootstrap';
+import { Grid, Row, Modal, Button } from 'react-bootstrap';
 import ReactInterval from 'react-interval';
-
 class WordScramble extends React.Component {
 
   constructor(props) {
@@ -17,7 +16,7 @@ class WordScramble extends React.Component {
       usedLetters: [],
       correctWord: "",
       score: 0,
-      timerCount: 60,
+      timerCount: 0,
       enabled: false,
       message: ""
     };
@@ -33,6 +32,7 @@ class WordScramble extends React.Component {
   }
 
   scrambleText = (word) =>{
+    console.log("scrambling text again");
     var scrambledWord = "";
     var usedIndex = {};
     var scrambledWordTemp = [];
@@ -49,10 +49,12 @@ class WordScramble extends React.Component {
     var toUpdate = {scrambledWord: scrambledWord, 
                    correctWord: word, 
                    scrambledWordObjCopy: scrambledWordTemp,
-                   scrambledWordObj: scrambledWordTemp};
+                   scrambledWordObj: scrambledWordTemp,
+                   gameOver: false};
 
     if(!this.state.enabled){
       toUpdate.enabled = true;
+      toUpdate.timerCount = 60;
     }
     this.setState(toUpdate);
   }
@@ -99,11 +101,12 @@ class WordScramble extends React.Component {
   }
 
   interval = () =>{
+    var that = this;
     if(this.state.timerCount > 0 ){
       this.setState({timerCount: this.state.timerCount - 1});
     }
     else{
-      this.setState({enabled: false});
+      this.setState({enabled: false, gameOver: true});
     }
   }
 
@@ -137,6 +140,13 @@ class WordScramble extends React.Component {
           {this.state.message.length >0?
             this.state.message: null}
         </Row>
+
+        <Modal show={this.state.gameOver} onHide={this.getWord}>
+          <Modal.Body className='text-center score'>
+              your score: {this.state.score} <br/>
+              <Button className='restartButton' onClick={this.getWord}>Start Over</Button>
+          </Modal.Body>
+        </Modal>
       </Grid>
     );
   }

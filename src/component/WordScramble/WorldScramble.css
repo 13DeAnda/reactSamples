@@ -62,3 +62,13 @@
   font-size: 20px;
   color: green;
 }
+.correct{
+  color: green;
+  font-size: 20px;
+  text-align: center;
+}
+.incorrect{
+  font-size: 20px;
+  color: red;
+  text-align: center;
+}

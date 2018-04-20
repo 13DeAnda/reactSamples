@@ -18,7 +18,8 @@ class WordScramble extends React.Component {
       correctWord: "",
       score: 0,
       timerCount: 60,
-      enabled: false
+      enabled: false,
+      message: ""
     };
   }
 
@@ -83,14 +84,17 @@ class WordScramble extends React.Component {
   checkIfCorrect = (newText) =>{
     if(newText === this.state.correctWord){
       var score = _.cloneDeep(this.state.score);
-      this.setState({score: ++score, message: "correct!"});
+      this.setState({score: ++score, message: "correct"});
       setTimeout(function() { 
         this.setState({message: "", usedLetters: [], userWord: ""});
         this.getWord();
-      }.bind(this), 1000);
+      }.bind(this), 2000);
     }
     else if(newText.length === this.state.correctWord.length){
-      this.setState({message: "Incorrect"});
+      this.setState({message: "incorrect"});
+      setTimeout(function() { 
+        this.setState({message: ""});
+      }.bind(this), 2000);
     }
   }
 
@@ -128,6 +132,10 @@ class WordScramble extends React.Component {
         </Row>
         <Row className="text-center score">
           matches:  {this.state.score}
+        </Row>
+        <Row className={this.state.message}>
+          {this.state.message.length >0?
+            this.state.message: null}
         </Row>
       </Grid>
     );

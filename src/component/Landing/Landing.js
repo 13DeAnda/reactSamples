@@ -8,7 +8,8 @@ class Landing extends React.Component {
       <div>
         <ul>
       	 <li><Link to="/calculator">Calculator</Link></li>
-         <li><Link to="/todolist">To Do List</Link></li>
+         <li><Link to="/to-do-list">To Do List</Link></li>
+          <li><Link to="/word-scramble">Word Scramble</Link></li>
         </ul>
       </div>
     );

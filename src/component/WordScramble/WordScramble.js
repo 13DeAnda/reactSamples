@@ -101,7 +101,6 @@ class WordScramble extends React.Component {
   }
 
   interval = () =>{
-    var that = this;
     if(this.state.timerCount > 0 ){
       this.setState({timerCount: this.state.timerCount - 1});
     }

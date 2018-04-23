@@ -7,48 +7,41 @@ class RomanNumerals extends React.Component {
     super(props);
     this.state = {
       started: false,
+      romanNumbers: {
+        M: {number: 1000, extractor: {roman: "C", number: 100}, isExtractor: false},
+        D: {number: 500, extractor:{roman: "C", number: 100}, isExtractor: false},
+        C: {number: 100, extractor:{roman: "X", number: 10}, isExtractor: true},
+        L: {number: 50, extractor:{roman: "X", number: 10}, isExtractor: false},
+        X: {number: 10, extractor:{roman: "I", number: 1}, isExtractor: true},
+        V: {number: 5, extractor:{roman: "I", number: 1}, isExtractor: false},
+        I: {number: 1, extractor: null, isExtractor: true}
+      }
     };
   }
 
-  romanToNumber = (arg) =>{
+  romanToNumber = (valueToConvert) =>{
     this.setState({started: true});
-    var romanNumbers = [
-      {roman: "C", number: 1000, extractor: null, isExtractor: false},
-      {roman: "D", number: 500, extractor:{roman: "C", number: "100"}, isExtractor: false},
-      {roman: "C", number: 100, extractor:{roman: "X", number: "10"}, isExtractor: true},
-      {roman: "L", number: 50, extractor:{roman: "X", number: "10"}, isExtractor: false},
-      {roman: "X", number: 10, extractor:{roman: "I", number: "1"}, isExtractor: true},
-      {roman: "V", number: 5, extractor:{roman: "I", number: "1"}, isExtractor: false},
-      {roman: "I", number: 1, extractor: null, isExtractor: true}
-    ];
-
+    console.log(valueToConvert);
     var finalConvertedNumber = 0;
-    var numberToConvert = parseInt(arg);
-    
 
-    for(var i = 0; i < arg.length; i++){
-      var letter = arg[i];
-      console.log("the arg", arg[i]);
-      for(var j = 0; j < romanNumbers.length; j++){
-        var romanObj = romanNumbers[j];
-        //if it has a next number check if the next number matches the extractor
-        console.log("thorugh", romanObj, arg[i+1])
-        if(letter === romanObj.roman && 
-           arg[i+1] && 
-           romanObj.isExtractor && 
-           romanObj.extractor && 
-           romanObj.extractor === arg[i+1]){
+    for(var i = 0; i < valueToConvert.length; i++){
+      var letter = valueToConvert[i];
+      var nextLetter = valueToConvert[i+1];
 
-          finalConvertedNumber +=  (arg[i+1].number - romanObj.number);
+      var letterObj = this.state.romanNumbers[letter];
+      var nextLetterObj = nextLetter? this.state.romanNumbers[nextLetter] : null;
+
+      if(nextLetter && 
+        letterObj.isExtractor && 
+        nextLetterObj.extractor && 
+        nextLetterObj.extractor.roman === letter){
+
+          finalConvertedNumber += (nextLetterObj.number - letterObj.number);
           i++;
-          break;
-        }
-        // else if(letter === romanObj.roman){
-        //   finalConvertedNumber +=romanObj.number;
-        //   break;
-        // }
       }
-      
+      else{
+        finalConvertedNumber += letterObj.number;
+      }
     }
     console.log("the final", finalConvertedNumber);
   }
@@ -56,7 +49,7 @@ class RomanNumerals extends React.Component {
   render() {
     return (
       <Grid className="container-fluid RomanNumerals">
-        {!this.state.started? this.romanToNumber('IV') : null}
+        {!this.state.started? this.romanToNumber('CII') : null}
       </Grid>
     );
   }

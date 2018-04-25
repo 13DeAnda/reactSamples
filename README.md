@@ -23,3 +23,15 @@ Usage
 ---
 
 `npm start`
+
+
+Test
+---
+  Requirements:
+  	-- java development kit installed
+    --`sudo npm install -g protractor`
+    --`sudo webdriver-manager update`
+
+  Run:
+    -- terminal tab A:  -`sudo webdriver-manager start`
+    -- terminal  tab B:  -`protractor testing.js`

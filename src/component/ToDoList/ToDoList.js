@@ -21,7 +21,7 @@ class ToDoList extends React.Component {
   render() {
 
     return (
-      <div>
+      <div className='toDoListContainer'>
         <div>
         <input type="text" value={this.state.textToAdd} onChange={this.onChange}/>
           <button onClick={this.addToList}> Add To List </button>

@@ -1,38 +1,45 @@
 import React from 'react';
-class ToDoList extends React.Component {
+import '../../shared/shared.css';
+import './ToDoList.css';
+
+export default class ToDoList extends React.Component {
   constructor(props) {
     super(props);
+    this.onChange = this.onChange.bind(this);
+    this.addToList = this.addToList.bind(this);
     this.state = {
       textToAdd: "",
       toDoList: []
     };
   }
 
-  addToList = () => {
-    var tempList = this.state.toDoList;
-    tempList.push(this.state.textToAdd);
-    this.setState({toDoList: tempList, textToAdd: ""});
-  }
-
-  onChange = (e) => {
-    const newText = e.target.value;  
-    this.setState({textToAdd : newText}); 
-  }
   render() {
-
     return (
-      <div className='toDoListContainer'>
+      <div className='container text-center'>
+        <div className='title'> To Do List </div>
         <div>
-        <input type="text" value={this.state.textToAdd} onChange={this.onChange}/>
-          <button onClick={this.addToList}> Add To List </button>
+          <input type="text" value={this.state.textToAdd} onChange={this.onChange}/>
+          <button onClick={() => this.addToList(this.state.textToAdd)}> Add To List </button>
         </div>
-        <div>
+        <ul className='text-left'>
           {this.state.toDoList.map(function(item){
-            return <div key={item}>{item}</div>
+            return <li className='listItem' key={item}>
+              <input className='checkListBox' type="checkbox"/>{item} 
+            </li>
           })}
-        </div>
+        </ul>
       </div>
     );
   }
+
+  addToList (text){
+    var tempList = this.state.toDoList;
+    tempList.push(text);
+    this.setState({toDoList: tempList, textToAdd: ""});
+    return tempList;
+  }
+
+  onChange (e) {
+    this.setState({textToAdd : e.target.value});
+  }
 }
-export default ToDoList;

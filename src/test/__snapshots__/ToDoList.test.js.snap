@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ToDoList component should render snapshot 1`] = `
+<div
+  className="toDoListContainer"
+>
+  <div>
+    <input
+      onChange={[Function]}
+      type="text"
+      value=""
+    />
+    <button
+      onClick={[Function]}
+    >
+       Add To List 
+    </button>
+  </div>
+  <div />
+</div>
+`;

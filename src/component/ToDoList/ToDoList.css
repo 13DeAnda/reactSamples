@@ -1,0 +1,10 @@
+.listItem{
+  margin-top: 20px;
+  font-size: 20px;
+  font-family: cursive;
+  list-style: none;
+  margin-left: 10%;
+}
+.checkListBox{
+  margin-left: 10px !important;
+}

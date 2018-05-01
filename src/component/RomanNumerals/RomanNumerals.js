@@ -40,6 +40,7 @@ export default class RomanNumerals extends React.Component {
   }
 
   romanToNumber (valueToConvert){
+    console.log("valueToConvert new", valueToConvert);
     valueToConvert = valueToConvert.toUpperCase();
     var finalConvertedNumber = 0;
 
@@ -48,8 +49,9 @@ export default class RomanNumerals extends React.Component {
       var nextLetter = valueToConvert[i+1];
 
       var letterObj = this.state.romanNumbers[letter];
-
+      console.log(letter, nextLetter, letterObj);
       if(!letterObj){
+        console.log("this case", letterObj);
         this.setState({message: "Invalid Input"});
         break;
       }
@@ -68,6 +70,7 @@ export default class RomanNumerals extends React.Component {
         finalConvertedNumber += letterObj.number;
       }
     }
+    console.log("the finalConvertedNumber", finalConvertedNumber);
     return finalConvertedNumber;
   }
 

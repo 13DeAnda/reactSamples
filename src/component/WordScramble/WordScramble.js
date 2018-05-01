@@ -4,10 +4,16 @@ import _ from 'lodash';
 import './WorldScramble.css';
 import { Grid, Row, Modal, Button } from 'react-bootstrap';
 import ReactInterval from 'react-interval';
-class WordScramble extends React.Component {
+export default class WordScramble extends React.Component {
 
   constructor(props) {
     super(props);
+    this.scrambleText = this.scrambleText.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.checkForLetter = this.checkForLetter.bind(this);
+    this.checkIfCorrect = this.checkIfCorrect.bind(this);
+    this.interval = this.interval.bind(this);
+    this.getWord = this.getWord.bind(this);
     this.state = {
       userWord: "",
       scrambledWord: "",
@@ -20,93 +26,6 @@ class WordScramble extends React.Component {
       enabled: false,
       message: ""
     };
-  }
-
-  getWord = () =>  {
-    var that = this;
-    axios.get('http://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&includePartOfSpeech=adverb&excludePartOfSpeech=verb&minCorpusCount=0&maxCorpusCount=-1&minDictionaryCount=1&maxDictionaryCount=-1&minLength=5&maxLength=8&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5')
-      .then(function(response){
-        console.log("the word", response.data.word);
-        that.scrambleText(response.data.word);
-      })
-  }
-
-  scrambleText = (word) =>{
-    console.log("scrambling text again");
-    var scrambledWord = "";
-    var usedIndex = {};
-    var scrambledWordTemp = [];
-
-    while(scrambledWord.length !== word.length){
-      var randomIndex = Math.floor(Math.random() * word.length) + 0;
-      if(!usedIndex[randomIndex]){
-        usedIndex[randomIndex] = true;
-        scrambledWord += word[randomIndex];
-        scrambledWordTemp.push({letter: word[randomIndex], used: false})
-      }
-    }
-
-    var toUpdate = {scrambledWord: scrambledWord, 
-                   correctWord: word, 
-                   scrambledWordObjCopy: scrambledWordTemp,
-                   scrambledWordObj: scrambledWordTemp,
-                   gameOver: false};
-
-    if(!this.state.enabled){
-      toUpdate.enabled = true;
-      toUpdate.timerCount = 60;
-    }
-    this.setState(toUpdate);
-  }
-
-  onChange = (e) => {
-    const newText = e.target.value;
-    this.checkForLetter(newText);
-  }
-
-  checkForLetter = (newText) => {
-    var inWordText = "";
-    var usedLetters = [];
-    var scrambledWordObjTemp = _.cloneDeep(this.state.scrambledWordObjCopy);
-    _.forEach(newText, function(letter){
-
-      _.forEach(scrambledWordObjTemp, function(item){
-        if(!item.used && item.letter === letter){
-          item.used = true;
-          usedLetters.push({letter: item.letter});
-          inWordText += item.letter;
-          return false
-        }
-      });     
-    });
-    this.setState({userWord: inWordText, usedLetters: usedLetters, scrambledWordObj: scrambledWordObjTemp});
-    this.checkIfCorrect(newText);
-  }
-
-  checkIfCorrect = (newText) =>{
-    if(newText === this.state.correctWord){
-      var score = _.cloneDeep(this.state.score);
-      this.setState({score: ++score, message: "correct"});
-      setTimeout(function() { 
-        this.setState({message: "", usedLetters: [], userWord: ""});
-        this.getWord();
-      }.bind(this), 2000);
-    }
-    else if(newText.length === this.state.correctWord.length){
-      this.setState({message: "incorrect"});
-      setTimeout(function() { 
-        this.setState({message: ""});
-      }.bind(this), 2000);
-    }
-  }
-
-  interval = () =>{
-    if(this.state.timerCount > 0 ){
-      this.setState({timerCount: this.state.timerCount - 1});
-    }
-    else{
-      this.setState({enabled: false, gameOver: true});
-    }
   }
 
   render() {
@@ -149,5 +68,91 @@ class WordScramble extends React.Component {
       </Grid>
     );
   }
+
+  getWord() {
+    var that = this;
+    axios.get('http://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&includePartOfSpeech=adverb&excludePartOfSpeech=verb&minCorpusCount=0&maxCorpusCount=-1&minDictionaryCount=1&maxDictionaryCount=-1&minLength=5&maxLength=8&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5')
+      .then(function(response){
+        that.scrambleText(response.data.word);
+      })
+  }
+
+  scrambleText (word){
+    console.log("scrambling text again");
+    var scrambledWord = "";
+    var usedIndex = {};
+    var scrambledWordTemp = [];
+
+    while(scrambledWord.length !== word.length){
+      var randomIndex = Math.floor(Math.random() * word.length) + 0;
+      if(!usedIndex[randomIndex]){
+        usedIndex[randomIndex] = true;
+        scrambledWord += word[randomIndex];
+        scrambledWordTemp.push({letter: word[randomIndex], used: false})
+      }
+    }
+
+    var toUpdate = {scrambledWord: scrambledWord, 
+                   correctWord: word, 
+                   scrambledWordObjCopy: scrambledWordTemp,
+                   scrambledWordObj: scrambledWordTemp,
+                   gameOver: false};
+
+    if(!this.state.enabled){
+      toUpdate.enabled = true;
+      toUpdate.timerCount = 60;
+    }
+    this.setState(toUpdate);
+    return scrambledWord;
+  }
+
+  onChange(e){
+    const newText = e.target.value;
+    this.checkForLetter(newText);
+  }
+
+  checkForLetter(newText){
+    var inWordText = "";
+    var usedLetters = [];
+    var scrambledWordObjTemp = _.cloneDeep(this.state.scrambledWordObjCopy);
+    _.forEach(newText, function(letter){
+
+      _.forEach(scrambledWordObjTemp, function(item){
+        if(!item.used && item.letter === letter){
+          item.used = true;
+          usedLetters.push({letter: item.letter});
+          inWordText += item.letter;
+          return false
+        }
+      });     
+    });
+    this.setState({userWord: inWordText, usedLetters: usedLetters, scrambledWordObj: scrambledWordObjTemp});
+    this.checkIfCorrect(newText);
+  }
+
+  checkIfCorrect(newText){
+    if(newText === this.state.correctWord){
+      var score = _.cloneDeep(this.state.score);
+      this.setState({score: ++score, message: "correct"});
+      setTimeout(function() { 
+        this.setState({message: "", usedLetters: [], userWord: ""});
+        this.getWord();
+      }.bind(this), 2000);
+    }
+    else if(newText.length === this.state.correctWord.length){
+      this.setState({message: "incorrect"});
+      setTimeout(function() { 
+        this.setState({message: ""});
+      }.bind(this), 2000);
+    }
+  }
+
+  interval(){
+    if(this.state.timerCount > 0 ){
+      this.setState({timerCount: this.state.timerCount - 1});
+    }
+    else{
+      this.setState({enabled: false, gameOver: true});
+    }
+  }
 }
-export default WordScramble;

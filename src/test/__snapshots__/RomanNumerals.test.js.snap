@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RomanNumerals component should render snapshot 1`] = `
+<div
+  className="container-fluid RomanNumerals container"
+>
+  <div
+    className="text-center row"
+  >
+    <input
+      className="textInput"
+      onChange={[Function]}
+      type="text"
+      value=""
+    />
+    <br />
+    <button
+      className="convertButton"
+      onClick={[Function]}
+    >
+       Convert Numer 
+    </button>
+    <br />
+    <div
+      className="convertedValue text-center row"
+    >
+      
+    </div>
+  </div>
+</div>
+`;

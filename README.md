@@ -23,3 +23,8 @@ Usage
 ---
 
 `npm start`
+
+
+Test
+---
+`npm test`

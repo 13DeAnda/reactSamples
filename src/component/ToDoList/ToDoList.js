@@ -1,38 +1,75 @@
 import React from 'react';
-class ToDoList extends React.Component {
+import '../../shared/shared.css';
+import './ToDoList.css';
+
+export default class ToDoList extends React.Component {
   constructor(props) {
     super(props);
+    this.onChange = this.onChange.bind(this);
+    this.addToList = this.addToList.bind(this);
+    this.inputSelected = this.inputSelected.bind(this);
+    this.deleteSelected = this.deleteSelected.bind(this);
     this.state = {
       textToAdd: "",
-      toDoList: []
+      toDoList: [],
+      itemsToDelete: 0
     };
   }
 
-  addToList = () => {
-    var tempList = this.state.toDoList;
-    tempList.push(this.state.textToAdd);
-    this.setState({toDoList: tempList, textToAdd: ""});
-  }
-
-  onChange = (e) => {
-    const newText = e.target.value;  
-    this.setState({textToAdd : newText}); 
-  }
   render() {
-
     return (
-      <div>
+      <div className='container text-center'>
+        <div className='title'> To Do List </div>
         <div>
-        <input type="text" value={this.state.textToAdd} onChange={this.onChange}/>
-          <button onClick={this.addToList}> Add To List </button>
+          <input type="text" value={this.state.textToAdd} onChange={this.onChange} className='addInput'/>
+          <button  onClick={() => this.addToList(this.state.textToAdd)} className='addButton'> Add To List </button>
         </div>
-        <div>
-          {this.state.toDoList.map(function(item){
-            return <div key={item}>{item}</div>
-          })}
-        </div>
+        <ul className='text-left'>
+          {this.state.toDoList.map(function(item, index){
+            return <li className='listItem' key={index}>
+              <input className='checkListBox' 
+                     checked={item.checked} 
+                     onClick={() => this.inputSelected(item)} 
+                     type="checkbox"/>{item.text} 
+            </li>
+          }, this)}
+        </ul>
+        {this.state.itemsToDelete?
+          <button  onClick={this.deleteSelected} className='deleteButton'> Delete Selected </button>
+          :null}
       </div>
     );
   }
+
+  deleteSelected() {
+    var newList = [];
+    for(var i = 0; i < this.state.toDoList.length; i++){
+      if(!this.state.toDoList[i].checked){
+        newList.push(this.state.toDoList[i]);
+      }
+    }
+    this.setState({toDoList: newList, itemsToDelete: 0});
+  }
+  inputSelected(item){
+    item.checked = !item.checked;
+    if(item.checked){
+      this.setState({itemsToDelete: ++this.state.itemsToDelete});
+    }
+    else{
+      this.setState({itemsToDelete: --this.state.itemsToDelete});
+    }
+  }
+
+  addToList (text){
+    if(text.length > 0){
+     var tempList = this.state.toDoList;
+      tempList.push({text:text, checked: false});
+      this.setState({toDoList: tempList, textToAdd: ""});
+      return tempList;     
+    }
+  }
+
+  onChange (e) {
+    this.setState({textToAdd : e.target.value});
+  }
 }
-export default ToDoList;

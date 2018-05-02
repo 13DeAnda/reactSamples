@@ -1,15 +1,17 @@
 import React from 'react';
-import './RomanNumerals.css';
-import _ from 'lodash';
 import { Grid, Row } from 'react-bootstrap';
 import './RomanNumerals.css';
+import _ from 'lodash';
 
-class RomanNumerals extends React.Component {
 
-//BUg 4554
+export default class RomanNumerals extends React.Component {
 
   constructor(props) {
     super(props);
+    this.onChange = this.onChange.bind(this);
+    this.romanToNumber = this.romanToNumber.bind(this);
+    this.numberToRoman = this.numberToRoman.bind(this);
+    this.convert = this.convert.bind(this);
     this.state = {
       textToConvert: "",
       converted: "",
@@ -25,7 +27,21 @@ class RomanNumerals extends React.Component {
     };
   }
 
-  romanToNumber = (valueToConvert) =>{
+  render() {
+    return (
+      <Grid className="container-fluid RomanNumerals">
+        <Row className="text-center">
+          <input type="text" value={this.state.textToConvert} onChange={this.onChange} className='textInput'/><br/>
+          <button onClick={this.convert} className='convertButton'> Convert Numer </button><br/>
+          <Row className='convertedValue text-center'>
+            {this.state.message? this.state.message :this.state.converted}
+          </Row>
+        </Row>
+      </Grid>
+    );
+  }
+
+  romanToNumber (valueToConvert){
     valueToConvert = valueToConvert.toUpperCase();
     var finalConvertedNumber = 0;
 
@@ -34,9 +50,8 @@ class RomanNumerals extends React.Component {
       var nextLetter = valueToConvert[i+1];
 
       var letterObj = this.state.romanNumbers[letter];
-
       if(!letterObj){
-        this.setState({message: "Invalid Input"});
+        this.setState({message: "Invalid Input", converted: null});
         break;
       }
 
@@ -57,7 +72,7 @@ class RomanNumerals extends React.Component {
     return finalConvertedNumber;
   }
 
-  numberToRoman = (valueToConvert) =>{
+  numberToRoman (valueToConvert){
     var residue = valueToConvert;
     var romanNumber = "";
     _.forEach(this.state.romanNumbers, function(item, key){
@@ -78,7 +93,7 @@ class RomanNumerals extends React.Component {
     return romanNumber;
   }
 
-  convert = (valueToConvert) =>{
+  convert (valueToConvert){
     var value = "";
     if(isNaN(this.state.textToConvert)){
       value = this.romanToNumber(this.state.textToConvert)
@@ -88,23 +103,11 @@ class RomanNumerals extends React.Component {
     }
 
     this.setState({converted: value});
+    return value;
   }
 
-  onChange = (e) => {
-    const newText = e.target.value;  
-    this.setState({textToConvert : newText}); 
+  onChange (e){
+    this.setState({textToConvert : e.target.value, message: null}); 
   }
 
-  render() {
-    return (
-      <Grid className="container-fluid RomanNumerals">
-        <Row className="text-center">
-          <input type="text" value={this.state.textToConvert} onChange={this.onChange}/><br/>
-          <button onClick={this.convert}> Convert Numer </button><br/>
-          {this.state.converted}
-        </Row>
-      </Grid>
-    );
-  }
 }
-export default RomanNumerals;

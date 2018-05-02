@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import _ from 'lodash';
+import '../../shared/shared.css';
 import './WorldScramble.css';
 import { Grid, Row, Modal, Button } from 'react-bootstrap';
 import ReactInterval from 'react-interval';
@@ -69,12 +70,21 @@ export default class WordScramble extends React.Component {
     );
   }
 
-  getWord() {
-    var that = this;
-    axios.get('http://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&includePartOfSpeech=adverb&excludePartOfSpeech=verb&minCorpusCount=0&maxCorpusCount=-1&minDictionaryCount=1&maxDictionaryCount=-1&minLength=5&maxLength=8&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5')
-      .then(function(response){
-        that.scrambleText(response.data.word);
-      })
+  getWord(word) {
+    console.log("getting the word", word);
+    //expects a word when its called on test only
+    if(word && typeof word === "string"){
+      this.scrambleText(word);
+    }
+    else{
+      var that = this;
+      axios.get('http://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&includePartOfSpeech=adverb&excludePartOfSpeech=verb&minCorpusCount=0&maxCorpusCount=-1&minDictionaryCount=1&maxDictionaryCount=-1&minLength=5&maxLength=8&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5')
+        .then(function(response){
+          that.scrambleText(response.data.word);
+          console.log("the word ", response.data.word);
+        })      
+    }
+
   }
 
   scrambleText (word){

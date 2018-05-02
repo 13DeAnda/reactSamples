@@ -31,16 +31,17 @@ export default class RomanNumerals extends React.Component {
     return (
       <Grid className="container-fluid RomanNumerals">
         <Row className="text-center">
-          <input type="text" value={this.state.textToConvert} onChange={this.onChange}/><br/>
-          <button onClick={this.convert}> Convert Numer </button><br/>
-          {this.state.converted}
+          <input type="text" value={this.state.textToConvert} onChange={this.onChange} className='textInput'/><br/>
+          <button onClick={this.convert} className='convertButton'> Convert Numer </button><br/>
+          <Row className='convertedValue text-center'>
+            {this.state.message? this.state.message :this.state.converted}
+          </Row>
         </Row>
       </Grid>
     );
   }
 
   romanToNumber (valueToConvert){
-    console.log("valueToConvert new", valueToConvert);
     valueToConvert = valueToConvert.toUpperCase();
     var finalConvertedNumber = 0;
 
@@ -49,10 +50,8 @@ export default class RomanNumerals extends React.Component {
       var nextLetter = valueToConvert[i+1];
 
       var letterObj = this.state.romanNumbers[letter];
-      console.log(letter, nextLetter, letterObj);
       if(!letterObj){
-        console.log("this case", letterObj);
-        this.setState({message: "Invalid Input"});
+        this.setState({message: "Invalid Input", converted: null});
         break;
       }
 
@@ -70,7 +69,6 @@ export default class RomanNumerals extends React.Component {
         finalConvertedNumber += letterObj.number;
       }
     }
-    console.log("the finalConvertedNumber", finalConvertedNumber);
     return finalConvertedNumber;
   }
 
@@ -109,7 +107,7 @@ export default class RomanNumerals extends React.Component {
   }
 
   onChange (e){
-    this.setState({textToConvert : e.target.value}); 
+    this.setState({textToConvert : e.target.value, message: null}); 
   }
 
 }

@@ -11,11 +11,13 @@ exports[`ToDoList component should render snapshot 1`] = `
   </div>
   <div>
     <input
+      className="addInput"
       onChange={[Function]}
       type="text"
       value=""
     />
     <button
+      className="addButton"
       onClick={[Function]}
     >
        Add To List 

@@ -15,9 +15,9 @@ describe('WordScramble component', () => {
   });
 
   it('scrambles a text', () => {
-    const wordScramble = new WordScramble();
-    const word = wordScramble.scrambleText("test");
-    console.log("word", word);
+  	const wrapper = shallow(<WordScramble />);
+  	// console.log("the state", wrapper.state());
+
   });
 
 });

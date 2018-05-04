@@ -1,0 +1,4 @@
+.react-pdf__Document{
+  background: red;
+  width: fit-content !important;
+}

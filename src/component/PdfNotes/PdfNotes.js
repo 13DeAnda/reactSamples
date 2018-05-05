@@ -3,7 +3,6 @@ import { Grid, Row, Col } from 'react-bootstrap';
 import { Document, Page } from 'react-pdf';
 import './PdfNotes.css';
 import '../../shared/shared.css';
-import _ from 'lodash';
 
 
 export default class PdfNotes extends React.Component {
@@ -13,6 +12,7 @@ export default class PdfNotes extends React.Component {
     this.onChange = this.onChange.bind(this);
     this.previousPage = this.previousPage.bind(this);
     this.nextPage = this.nextPage.bind(this);
+    this.addHighlight = this.addHighlight.bind(this);
     this.state = {
       pdfPath: "",
       numPages: null,
@@ -29,6 +29,7 @@ export default class PdfNotes extends React.Component {
         <Row>
           <Col sm={4}>
             this is the menu
+            <button onClick={this.addHighlight}> Add highlight </button>
           </Col>
           <Col sm={6}>
             <Row className='text-center'>
@@ -49,20 +50,30 @@ export default class PdfNotes extends React.Component {
     );
   }
 
+  addHighlight(){
+    var highlightText = "<div class='highlight'> HELLO </div>";
+    var highlightElement = new DOMParser().parseFromString(highlightText, 'text/html');
+
+    var pdfContainer = document.getElementsByClassName("react-pdf__Page__textContent")[0];
+    pdfContainer.appendChild(highlightElement.documentElement);
+    console.log("hihglight must have been added");
+  }
   nextPage(){
     if(this.state.pageNumber < this.state.numPages){
-      this.setState({pageNumber: ++this.state.pageNumber});
+      var newPage = this.state.pageNumber;
+      this.setState({pageNumber: ++newPage});
     }
   }
 
   previousPage(){
     if(this.state.pageNumber > 1){
-      this.setState({pageNumber: --this.state.pageNumber});
+      var newPage = this.state.pageNumber;
+      this.setState({pageNumber: --newPage});
     }
   }
 
   onChange (e){
-    this.setState({textToConvert : e.target.value, message: null}); 
+    this.setState({textToConvert : e.target.value, message: null});
   }
 
 

@@ -1,4 +1,12 @@
 .react-pdf__Document{
-  background: red;
   width: fit-content !important;
+}
+
+.highlight{
+	z-index: 1000;
+  width: 200px;
+  height: 200px;
+  background: red;
+  position: absolute;
+  top: 0;
 }

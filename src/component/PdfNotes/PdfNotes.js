@@ -13,6 +13,9 @@ export default class PdfNotes extends React.Component {
     this.previousPage = this.previousPage.bind(this);
     this.nextPage = this.nextPage.bind(this);
     this.addHighlight = this.addHighlight.bind(this);
+    this.onHighlightZone = this.onHighlightZone.bind(this);
+    this.offHighlightZone = this.offHighlightZone.bind(this);
+    this.onMouseDrag = this.onMouseDrag.bind(this);
     this.state = {
       pdfPath: "",
       numPages: null,
@@ -38,6 +41,7 @@ export default class PdfNotes extends React.Component {
               <Col sm={2} md={2}> <button onClick={this.nextPage}> next </button> </Col>
             </Row>
             <Row>
+              <div className='highlightZone' onMouseOut={this.onHighlightZone} onMouseOver={this.offHighlightZone} onMouseMove={this.onMouseDrag}> hello </div>
               <Document
                 file="relativity.pdf"
                 onLoadSuccess={this.onDocumentLoad}>
@@ -50,6 +54,16 @@ export default class PdfNotes extends React.Component {
     );
   }
 
+  onMouseDrag(e){
+    console.log("the mouse drag", e.screenX, e.screenY);
+  }
+  onHighlightZone(){
+    console.log("on the highlight zone");
+  }
+
+  offHighlightZone(){
+    console.log("this is off the highlight zone");
+  }
   addHighlight(){
     var highlightText = "<div class='highlight'> HELLO </div>";
     var highlightElement = new DOMParser().parseFromString(highlightText, 'text/html');

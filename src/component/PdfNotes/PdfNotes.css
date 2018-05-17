@@ -4,10 +4,11 @@
 
 .highlight{
 	z-index: 200;
-  width: 200px;
-  height: 200px;
+  width: 613px;
+  height: 786px;
   background: red;
   position: absolute;
+  color: green;
   top: 0;
 }
 

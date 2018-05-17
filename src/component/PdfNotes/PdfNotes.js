@@ -1,8 +1,11 @@
 import React from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
 import { Document, Page } from 'react-pdf';
+import ReactDOM from 'react-dom';
 import './PdfNotes.css';
 import '../../shared/shared.css';
+
+import HighlightZone from './HighlightZone';
 
 
 export default class PdfNotes extends React.Component {
@@ -12,20 +15,21 @@ export default class PdfNotes extends React.Component {
     this.onChange = this.onChange.bind(this);
     this.previousPage = this.previousPage.bind(this);
     this.nextPage = this.nextPage.bind(this);
-    this.addHighlight = this.addHighlight.bind(this);
-    this.onMouseDrag = this.onMouseDrag.bind(this);
-    this.getRelativeCoordinates = this.getRelativeCoordinates.bind(this);
-    this.onHighlightZoneClick = this.onHighlightZoneClick.bind(this);
-    this.onHighlightZoneUp = this.onHighlightZoneUp.bind(this);
+    this.addAHighlight = this.addAHighlight.bind(this);
 
     this.state = {
       pdfPath: "",
       numPages: null,
-      pageNumber: 2
+      pageNumber: 2,
+      highlightZoneSize: null
     };
   }
   onDocumentLoad = (res) => {
-    this.setState({numPages: res.numPages});
+    setTimeout(function() {
+      var pdfHeight = document.getElementsByClassName("react-pdf__Page__textContent")[0].clientHeight;
+      var pdfWidth = document.getElementsByClassName("react-pdf__Page__textContent")[0].clientWidth;
+      this.setState({numPages: res.numPages, highlightZoneSize: [pdfHeight, pdfWidth]});
+    }.bind(this), 1000);
   }
 
   render() {
@@ -34,7 +38,7 @@ export default class PdfNotes extends React.Component {
         <Row>
           <Col className='sidePdfNotes' sm={4}>
             this is the menu
-            <button onClick={this.addHighlight}> Add highlight </button>
+            <button onClick={this.addAHighlight}> Add highlight </button>
           </Col>
           <Col sm={6}>
             <Row className='text-center pdfControlers'>
@@ -43,10 +47,7 @@ export default class PdfNotes extends React.Component {
               <Col sm={2} md={2}> <button onClick={this.nextPage}> next </button> </Col>
             </Row>
             <Row className='pdfContainer'>
-              <div className='highlightZone'
-                   onMouseMove={this.onMouseDrag}
-                   onMouseDown={this.onHighlightZoneClick}
-                   onMouseUp={this.onHighlightZoneUp}> hello </div>
+              <HighlightZone/>
               <Document
                 file="relativity.pdf"
                 onLoadSuccess={this.onDocumentLoad}>
@@ -59,42 +60,8 @@ export default class PdfNotes extends React.Component {
     );
   }
 
-  getRelativeCoordinates(e){
-    var offsetTop = document.getElementsByClassName("highlightZone")[0].offsetTop;
-    var offsetLeft = document.getElementsByClassName("sidePdfNotes")[0].clientWidth + document.getElementsByClassName("sidePdfNotes")[0].offsetLeft;
-
-    var headerHeight = document.getElementsByClassName("navbar")[0].clientHeight;
-    var pdfControlersHeight = document.getElementsByClassName("pdfControlers")[0].clientHeight;
-
-    return {top: e.clientY - headerHeight - pdfControlersHeight - offsetTop, left: e.clientX - offsetLeft};
-  }
-
-  onHighlightZoneClick(e){
-    var initialPoint = this.getRelativeCoordinates(e);
-    this.setState({highlightCreate: initialPoint});
-  }
-  onMouseDrag(e){
-    if(this.state.highlightCreate){
-      var coordinate = this.getRelativeCoordinates(e);
-      var initialCo = this.state.highlightCreate;
-
-      var newWidth = initialCo.left < coordinate.left ? initialCo.left + coordinate.left: initialCo.left - coordinate.left ;
-      var newHeight = initialCo.top < coordinate.top ? initialCo.top + coordinate.top: initialCo.top - coordinate.top ;
-
-      this.setState({highlightCreate: {top: initialCo.top, left: initialCo.left, height: newHeight, width: newWidth}});
-    }
-  }
-  onHighlightZoneUp(){
-    console.log("the highlight css", this.state.highlightCreate);
-    this.setState({highlightCreate: null});
-  }
-  addHighlight(){
-    var highlightText = "<div class='highlight'> HELLO </div>";
-    var highlightElement = new DOMParser().parseFromString(highlightText, 'text/html');
-
-    var pdfContainer = document.getElementsByClassName("react-pdf__Page__textContent")[0];
-    pdfContainer.appendChild(highlightElement.documentElement);
-    console.log("hihglight must have been added");
+  addAHighlight(){
+    console.log("addingAHighlight");
   }
   nextPage(){
     if(this.state.pageNumber < this.state.numPages){
@@ -113,6 +80,4 @@ export default class PdfNotes extends React.Component {
   onChange (e){
     this.setState({textToConvert : e.target.value, message: null});
   }
-
-
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import _ from 'lodash';
 import './PdfNotes.css';
 import '../../shared/shared.css';
 
@@ -15,7 +16,9 @@ export default class HighlightZone extends React.Component {
     this.generateStyle = this.generateStyle.bind(this);
 
     this.state = {
-      styleDrawHighlight: {}
+      styleDrawHighlight: {},
+      highlightCreate: null,
+      initialPoint: null
     };
   }
 
@@ -48,12 +51,10 @@ export default class HighlightZone extends React.Component {
     var headerHeight = document.getElementsByClassName("navbar")[0].clientHeight;
     var pdfControlersHeight = document.getElementsByClassName("pdfControlers")[0].clientHeight;
 
-    var newTop = e.clientY - headerHeight - pdfControlersHeight - offsetTop -4;
+    var x = e.clientY - headerHeight - pdfControlersHeight - offsetTop -4;
 
-    console.log(e.clientY, document.getElementsByClassName("navbar")[0], document.getElementsByClassName("pdfControlers")[0],  offsetTop);
-
-    var newLeft = e.clientX - offsetLeft;
-    return {top: newTop, left: newLeft};
+    var y = e.clientX - offsetLeft;
+    return {y: y, x: x};
   }
 
   generateStyle(currentStyle){
@@ -61,8 +62,8 @@ export default class HighlightZone extends React.Component {
       var newStyle = {};
       newStyle.marginTop= currentStyle.top + "px";
       newStyle.marginLeft = currentStyle.left + "px";
-      newStyle.width = currentStyle.width + "px";
-      newStyle.height = currentStyle.height + "px";
+      newStyle.width = currentStyle.right - currentStyle.left + "px";
+      newStyle.height = currentStyle.bottom - currentStyle.top + "px";
       newStyle.background = "red";
 
       this.setState({styleDrawHighlight: newStyle});
@@ -71,31 +72,34 @@ export default class HighlightZone extends React.Component {
 
   onHighlightZoneClick(e){
     var initialPoint = this.getRelativeCoordinates(e);
-    this.setState({highlightCreate: initialPoint});
+    this.setState({initialPoint: initialPoint});
   }
 
   onMouseDrag(e){
-    if(this.state.highlightCreate){
+    if(this.state.initialPoint){
       var coordinate = this.getRelativeCoordinates(e);
-      var initialCo = this.state.highlightCreate;
-      console.log(coordinate, initialCo);
+      var initialCo = this.state.initialPoint;
 
-      var newWidth = initialCo.left < coordinate.left ? coordinate.left - initialCo.left: initialCo.left - coordinate.left ;
+      var top = initialCo.x < coordinate.x? initialCo.x : coordinate.x;
+      var bottom = initialCo.x > coordinate.x? initialCo.x : coordinate.x;
 
-      console.log(initialCo.left < coordinate.left, initialCo.left, coordinate.left);
-      var newHeight = initialCo.top < coordinate.top ? coordinate.top - initialCo.top: initialCo.top - coordinate.top ;
+      var left = initialCo.y < coordinate.y? initialCo.y: coordinate.y;
+      var right = initialCo.y > coordinate.y? initialCo.y: coordinate.y;
 
-      var newTop = initialCo.top < coordinate.top ? initialCo.top : initialCo.top - newHeight;
-      var newLeft= initialCo.left < coordinate.left ? initialCo.left : initialCo.left - newWidth;
 
-      this.setState({highlightCreate: {top: newTop, left: newLeft, height: newHeight, width: newWidth}});
-
+      this.setState({
+        highlightCreate: {
+          top: top,
+          bottom: bottom,
+          left: left,
+          right: right
+        }
+      });
+      console.log("the state hello", this.state.highlightCreate);
       this.generateStyle(this.state.highlightCreate);
     }
   }
   onHighlightZoneUp(){
-    var style = this.generateStyle(this.state.highlightCreate);
-    console.log("the final style", style);
     this.setState({highlightCreate: null});
   }
   addHighlight(){

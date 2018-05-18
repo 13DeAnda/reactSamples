@@ -12,47 +12,90 @@ export default class HighlightZone extends React.Component {
     this.getRelativeCoordinates = this.getRelativeCoordinates.bind(this);
     this.onHighlightZoneClick = this.onHighlightZoneClick.bind(this);
     this.onHighlightZoneUp = this.onHighlightZoneUp.bind(this);
+    this.generateStyle = this.generateStyle.bind(this);
 
     this.state = {
+      styleDrawHighlight: {}
     };
   }
+
+  componentDidMount(){
+    if(this.props.highlightZoneSize[0]){
+      document.getElementById('highlightZone').style.height = this.props.highlightZoneSize[0] + "px";
+      document.getElementById('highlightZone').style.width = this.props.highlightZoneSize[1] + "px";
+    }
+  }
+  componentWillReceiveProps(nextProps){
+    console.log("the props updated", nextProps);
+  }
+
   render() {
     return (
       <div className='highlightZone'
            id="highlightZone"
            onMouseMove={this.onMouseDrag}
            onMouseDown={this.onHighlightZoneClick}
-           onMouseUp={this.onHighlightZoneUp}> I'm the new component  </div>
+           onMouseUp={this.onHighlightZoneUp}>
+            <div style={this.state.styleDrawHighlight}> hello </div>
+      </div>
     );
   }
 
   getRelativeCoordinates(e){
-    var offsetTop = document.getElementsByClassName("highlightZone")[0].offsetTop;
+    var offsetTop = document.getElementById("highlightZone").offsetTop;
     var offsetLeft = document.getElementsByClassName("sidePdfNotes")[0].clientWidth + document.getElementsByClassName("sidePdfNotes")[0].offsetLeft;
 
     var headerHeight = document.getElementsByClassName("navbar")[0].clientHeight;
     var pdfControlersHeight = document.getElementsByClassName("pdfControlers")[0].clientHeight;
 
-    return {top: e.clientY - headerHeight - pdfControlersHeight - offsetTop, left: e.clientX - offsetLeft};
+    var newTop = e.clientY - headerHeight - pdfControlersHeight - offsetTop -4;
+
+    console.log(e.clientY, document.getElementsByClassName("navbar")[0], document.getElementsByClassName("pdfControlers")[0],  offsetTop);
+
+    var newLeft = e.clientX - offsetLeft;
+    return {top: newTop, left: newLeft};
+  }
+
+  generateStyle(currentStyle){
+    if(currentStyle){
+      var newStyle = {};
+      newStyle.marginTop= currentStyle.top + "px";
+      newStyle.marginLeft = currentStyle.left + "px";
+      newStyle.width = currentStyle.width + "px";
+      newStyle.height = currentStyle.height + "px";
+      newStyle.background = "red";
+
+      this.setState({styleDrawHighlight: newStyle});
+    }
   }
 
   onHighlightZoneClick(e){
     var initialPoint = this.getRelativeCoordinates(e);
     this.setState({highlightCreate: initialPoint});
   }
+
   onMouseDrag(e){
     if(this.state.highlightCreate){
       var coordinate = this.getRelativeCoordinates(e);
       var initialCo = this.state.highlightCreate;
+      console.log(coordinate, initialCo);
 
-      var newWidth = initialCo.left < coordinate.left ? initialCo.left + coordinate.left: initialCo.left - coordinate.left ;
-      var newHeight = initialCo.top < coordinate.top ? initialCo.top + coordinate.top: initialCo.top - coordinate.top ;
+      var newWidth = initialCo.left < coordinate.left ? coordinate.left - initialCo.left: initialCo.left - coordinate.left ;
 
-      this.setState({highlightCreate: {top: initialCo.top, left: initialCo.left, height: newHeight, width: newWidth}});
+      console.log(initialCo.left < coordinate.left, initialCo.left, coordinate.left);
+      var newHeight = initialCo.top < coordinate.top ? coordinate.top - initialCo.top: initialCo.top - coordinate.top ;
+
+      var newTop = initialCo.top < coordinate.top ? initialCo.top : initialCo.top - newHeight;
+      var newLeft= initialCo.left < coordinate.left ? initialCo.left : initialCo.left - newWidth;
+
+      this.setState({highlightCreate: {top: newTop, left: newLeft, height: newHeight, width: newWidth}});
+
+      this.generateStyle(this.state.highlightCreate);
     }
   }
   onHighlightZoneUp(){
-    console.log("the highlight css", this.state.highlightCreate);
+    var style = this.generateStyle(this.state.highlightCreate);
+    console.log("the final style", style);
     this.setState({highlightCreate: null});
   }
   addHighlight(){

@@ -21,9 +21,11 @@ export default class PdfNotes extends React.Component {
       pdfPath: "",
       numPages: null,
       pageNumber: 2,
-      highlightZoneSize: null
+      highlightZoneSize: null,
+      highlightZoneHide: true
     };
   }
+
   onDocumentLoad = (res) => {
     setTimeout(function() {
       var pdfHeight = document.getElementsByClassName("react-pdf__Page__textContent")[0].clientHeight;
@@ -47,7 +49,8 @@ export default class PdfNotes extends React.Component {
               <Col sm={2} md={2}> <button onClick={this.nextPage}> next </button> </Col>
             </Row>
             <Row className='pdfContainer'>
-              <HighlightZone/>
+              {this.state.highlightZone}
+              {this.state.highlightZoneHide? null :<HighlightZone highlightZoneSize={this.state.highlightZoneSize} />}
               <Document
                 file="relativity.pdf"
                 onLoadSuccess={this.onDocumentLoad}>
@@ -61,7 +64,8 @@ export default class PdfNotes extends React.Component {
   }
 
   addAHighlight(){
-    console.log("addingAHighlight");
+    this.setState({highlightZoneHide: false})
+
   }
   nextPage(){
     if(this.state.pageNumber < this.state.numPages){

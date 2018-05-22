@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import './PdfNotes.css';
 import '../../shared/shared.css';
+import concatJsonIntoSring from '../../shared/utilities.js';
 
 export default class HighlightZone extends React.Component {
 
@@ -23,7 +24,8 @@ export default class HighlightZone extends React.Component {
   }
 
   componentDidMount(){
-    if(this.props.highlightZoneSize[0]){
+    if(this.props.highlightZoneSize && this.props.highlightZoneSize[0]){
+      console.log("the props received", this.props);
       document.getElementById('highlightZone').style.height = this.props.highlightZoneSize[0] + "px";
       document.getElementById('highlightZone').style.width = this.props.highlightZoneSize[1] + "px";
     }
@@ -95,24 +97,32 @@ export default class HighlightZone extends React.Component {
           right: right
         }
       });
-      console.log("the state hello", this.state.highlightCreate);
       this.generateStyle(this.state.highlightCreate);
     }
   }
   onHighlightZoneUp(){
-    this.setState({highlightCreate: null});
+    var finalStyle = _.cloneDeep(this.state.styleDrawHighlight);
+    finalStyle.background = "blue";
+
+    this.setState({
+      initialPoint: null,
+      styleDrawHighlight: {display: 'none'}
+    });
+
+    this.props.addAHighlight(true)
+    this.addHighlight(finalStyle);
   }
-  addHighlight(){
-    var highlightText = "<div class='highlight' style={{this.state.style}}> HELLO </div>";
+  addHighlight(finalStyle){
+
+    var highlightText = "<div style='"+ concatJsonIntoSring(finalStyle) +"'> </div>";
     var highlightElement = new DOMParser().parseFromString(highlightText, 'text/html');
+    var documentElement = highlightElement.documentElement;
+    documentElement.style="height:auto; width: auto;";
 
     var pdfContainer = document.getElementsByClassName("react-pdf__Page__textContent")[0];
-    var highlightContainer = document.getElementById("highlightZone");
 
     //you keep apending till finish drawing
-    highlightContainer.appendChild(highlightElement.documentElement);
+    pdfContainer.appendChild(highlightElement.documentElement);
 
-    //once it finishes drawing you append in the actual container
-    //ReactDOM.render(<Highlight />, pdfContainer);
   }
 }

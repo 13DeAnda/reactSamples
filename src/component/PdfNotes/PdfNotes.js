@@ -40,7 +40,7 @@ export default class PdfNotes extends React.Component {
         <Row>
           <Col className='sidePdfNotes' sm={4}>
             this is the menu
-            <button onClick={this.addAHighlight}> Add highlight </button>
+            <button onClick={()=>this.addAHighlight(false)}> Add highlight </button>
           </Col>
           <Col sm={6}>
             <Row className='text-center pdfControlers'>
@@ -50,7 +50,8 @@ export default class PdfNotes extends React.Component {
             </Row>
             <Row className='pdfContainer'>
               {this.state.highlightZone}
-              {this.state.highlightZoneHide? null :<HighlightZone highlightZoneSize={this.state.highlightZoneSize} />}
+              {this.state.highlightZoneHide? null :
+                <HighlightZone highlightZoneSize={this.state.highlightZoneSize} addAHighlight={this.addAHighlight}/>}
               <Document
                 file="relativity.pdf"
                 onLoadSuccess={this.onDocumentLoad}>
@@ -63,8 +64,8 @@ export default class PdfNotes extends React.Component {
     );
   }
 
-  addAHighlight(){
-    this.setState({highlightZoneHide: false})
+  addAHighlight(value){
+    this.setState({highlightZoneHide: value})
 
   }
   nextPage(){

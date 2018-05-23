@@ -28,9 +28,17 @@ export default class PdfNotes extends React.Component {
 
   onDocumentLoad = (res) => {
     setTimeout(function() {
-      var pdfHeight = document.getElementsByClassName("react-pdf__Page__textContent")[0].clientHeight;
-      var pdfWidth = document.getElementsByClassName("react-pdf__Page__textContent")[0].clientWidth;
+      var headerHeight = document.getElementsByClassName("navbar")[0].clientHeight;
+      var pdfControlersHeight = document.getElementsByClassName("pdfControlers")[0].clientHeight;
+
+      document.getElementById("pdfViewerContainer").style.height = window.innerHeight -headerHeight - pdfControlersHeight -20;
+
+      var pdfHeight = document.getElementById("pdfViewerContainer").clientHeight;
+      var pdfWidth = document.getElementById("pdfViewerContainer").clientWidth;
       this.setState({numPages: res.numPages, highlightZoneSize: [pdfHeight, pdfWidth]});
+
+
+
     }.bind(this), 1000);
   }
 
@@ -51,12 +59,14 @@ export default class PdfNotes extends React.Component {
             <Row className='pdfContainer'>
               {this.state.highlightZone}
               {this.state.highlightZoneHide? null :
-                <HighlightZone highlightZoneSize={this.state.highlightZoneSize} addAHighlight={this.addAHighlight}/>}
-              <Document
-                file="relativity.pdf"
-                onLoadSuccess={this.onDocumentLoad}>
-                <Page pageNumber={this.state.pageNumber} />
-              </Document>
+              <HighlightZone highlightZoneSize={this.state.highlightZoneSize} addAHighlight={this.addAHighlight}/>}
+              <div className="pdfViewerContainer" id="pdfViewerContainer">
+                <Document
+                  file="relativity.pdf"
+                  onLoadSuccess={this.onDocumentLoad}>
+                  <Page pageNumber={this.state.pageNumber} />
+                </Document>
+              </div>
             </Row>
           </Col>
         </Row>

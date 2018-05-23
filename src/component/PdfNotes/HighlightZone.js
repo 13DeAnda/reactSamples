@@ -27,7 +27,7 @@ export default class HighlightZone extends React.Component {
     if(this.props.highlightZoneSize && this.props.highlightZoneSize[0]){
       console.log("the props received", this.props);
       document.getElementById('highlightZone').style.height = this.props.highlightZoneSize[0] + "px";
-      document.getElementById('highlightZone').style.width = this.props.highlightZoneSize[1] + "px";
+      document.getElementById('highlightZone').style.width = this.props.highlightZoneSize[1]-15 + "px";
     }
   }
   componentWillReceiveProps(nextProps){
@@ -41,7 +41,7 @@ export default class HighlightZone extends React.Component {
            onMouseMove={this.onMouseDrag}
            onMouseDown={this.onHighlightZoneClick}
            onMouseUp={this.onHighlightZoneUp}>
-            <div style={this.state.styleDrawHighlight}> hello </div>
+            <div style={this.state.styleDrawHighlight}></div>
       </div>
     );
   }
@@ -67,6 +67,8 @@ export default class HighlightZone extends React.Component {
       newStyle.width = currentStyle.right - currentStyle.left + "px";
       newStyle.height = currentStyle.bottom - currentStyle.top + "px";
       newStyle.background = "red";
+      newStyle.opacity = ".5";
+
 
       this.setState({styleDrawHighlight: newStyle});
     }
@@ -88,13 +90,13 @@ export default class HighlightZone extends React.Component {
       var left = initialCo.y < coordinate.y? initialCo.y: coordinate.y;
       var right = initialCo.y > coordinate.y? initialCo.y: coordinate.y;
 
-
       this.setState({
         highlightCreate: {
           top: top,
           bottom: bottom,
           left: left,
-          right: right
+          right: right,
+          offsetTop: document.getElementById("pdfViewerContainer").scrollTop
         }
       });
       this.generateStyle(this.state.highlightCreate);
@@ -102,12 +104,13 @@ export default class HighlightZone extends React.Component {
   }
   onHighlightZoneUp(){
     var finalStyle = _.cloneDeep(this.state.styleDrawHighlight);
+    finalStyle.marginTop = parseInt(finalStyle.marginTop.split("px").join("")) + parseInt(this.state.highlightCreate.offsetTop) + "px";
     finalStyle.background = "blue";
 
-    this.setState({
-      initialPoint: null,
-      styleDrawHighlight: {display: 'none'}
-    });
+    // this.setState({
+    //   initialPoint: null,
+    //   styleDrawHighlight: {display: 'none'}
+    // });
 
     this.props.addAHighlight(true)
     this.addHighlight(finalStyle);
@@ -117,7 +120,7 @@ export default class HighlightZone extends React.Component {
     var highlightText = "<div style='"+ concatJsonIntoSring(finalStyle) +"'> </div>";
     var highlightElement = new DOMParser().parseFromString(highlightText, 'text/html');
     var documentElement = highlightElement.documentElement;
-    documentElement.style="height:auto; width: auto;";
+    documentElement.style="height:fit-content; width: fit-content;";
 
     var pdfContainer = document.getElementsByClassName("react-pdf__Page__textContent")[0];
 

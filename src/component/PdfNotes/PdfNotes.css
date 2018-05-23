@@ -18,5 +18,15 @@
   background: green;
   opacity:.5;
   position: absolute;
+  z-index: 11;
+}
+
+.pdfViewerContainer{
+  height: 200px;
+  width: 100%;
+  position: absolute;
   z-index: 10;
+  overflow: auto;
+}
+canvas{
 }

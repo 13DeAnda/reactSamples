@@ -4,6 +4,7 @@ import _ from 'lodash';
 import './PdfNotes.css';
 import '../../shared/shared.css';
 import concatJsonIntoSring from '../../shared/utilities.js';
+import Highlight from './Highlight';
 
 export default class HighlightZone extends React.Component {
 
@@ -25,13 +26,11 @@ export default class HighlightZone extends React.Component {
 
   componentDidMount(){
     if(this.props.highlightZoneSize && this.props.highlightZoneSize[0]){
-      console.log("the props received", this.props);
       document.getElementById('highlightZone').style.height = this.props.highlightZoneSize[0] + "px";
       document.getElementById('highlightZone').style.width = this.props.highlightZoneSize[1]-15 + "px";
     }
   }
   componentWillReceiveProps(nextProps){
-    console.log("the props updated", nextProps);
   }
 
   render() {
@@ -104,6 +103,7 @@ export default class HighlightZone extends React.Component {
   }
   onHighlightZoneUp(){
     var finalStyle = _.cloneDeep(this.state.styleDrawHighlight);
+    console.log("the highlight state", this.state.styleDrawHighlight);
     finalStyle.marginTop = parseInt(finalStyle.marginTop.split("px").join("")) + parseInt(this.state.highlightCreate.offsetTop) + "px";
     finalStyle.background = "blue";
 
@@ -119,13 +119,11 @@ export default class HighlightZone extends React.Component {
 
     var highlightText = "<div style='"+ concatJsonIntoSring(finalStyle) +"'> </div>";
     var highlightElement = new DOMParser().parseFromString(highlightText, 'text/html');
-    var documentElement = highlightElement.documentElement;
-    documentElement.style="height:fit-content; width: fit-content;";
 
     var pdfContainer = document.getElementsByClassName("react-pdf__Page__textContent")[0];
+    ReactDOM.render(<Highlight styleToPass= {finalStyle} />, pdfContainer);
 
-    //you keep apending till finish drawing
-    pdfContainer.appendChild(highlightElement.documentElement);
+
 
   }
 }

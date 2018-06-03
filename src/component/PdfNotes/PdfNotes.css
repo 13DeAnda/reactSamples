@@ -28,5 +28,11 @@
   z-index: 10;
   overflow: auto;
 }
+
+.finalHighlight{
+  position: absolute;
+  z-index: 200;
+  color:red;
+}
 canvas{
 }

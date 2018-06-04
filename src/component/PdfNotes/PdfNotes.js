@@ -2,27 +2,34 @@ import React from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
 import { Document, Page } from 'react-pdf';
 import ReactDOM from 'react-dom';
+import _ from 'lodash';
+
+
 import './PdfNotes.css';
 import '../../shared/shared.css';
 
 import HighlightZone from './HighlightZone';
-
+import Highlight from './Highlight';
 
 export default class PdfNotes extends React.Component {
 
   constructor(props) {
     super(props);
+
     this.onChange = this.onChange.bind(this);
     this.previousPage = this.previousPage.bind(this);
     this.nextPage = this.nextPage.bind(this);
-    this.addAHighlight = this.addAHighlight.bind(this);
+    this.showHighlight = this.showHighlight.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.addHighlight = this.addHighlight.bind(this);
 
     this.state = {
       pdfPath: "",
       numPages: null,
       pageNumber: 2,
       highlightZoneSize: null,
-      highlightZoneHide: true
+      highlightZoneHide: true,
+      userHighlights: []
     };
   }
 
@@ -46,9 +53,20 @@ export default class PdfNotes extends React.Component {
     return (
       <Grid className="RomanNumerals">
         <Row>
-          <Col className='sidePdfNotes' sm={4}>
-            this is the menu
-            <button onClick={()=>this.addAHighlight(false)}> Add highlight </button>
+          <Col className='sidePdfNotes text-center' sm={4}>
+            {this.state.userHighlights.map(function(highlight, index){
+              return <div key={index}>
+                {highlight.page} <br/>
+                {highlight.textToAdd}
+              </div>
+            })}
+            {this.state.highlightZoneHide?
+              <button onClick={()=>this.showHighlight(false)}> Add highlight </button>
+            :null}
+            {this.state.highlightZoneHide? null:
+              <textarea value={this.state.textToAdd} className='highlightNote' placeholder='add highlight note'/>
+            }
+
           </Col>
           <Col sm={6}>
             <Row className='text-center pdfControlers'>
@@ -59,7 +77,9 @@ export default class PdfNotes extends React.Component {
             <Row className='pdfContainer'>
               {this.state.highlightZone}
               {this.state.highlightZoneHide? null :
-              <HighlightZone highlightZoneSize={this.state.highlightZoneSize} addAHighlight={this.addAHighlight}/>}
+              <HighlightZone highlightZoneSize={this.state.highlightZoneSize}
+                             showHighlight={this.showHighlight}
+                             addHighlight={this.addHighlight} />}
               <div className="pdfViewerContainer" id="pdfViewerContainer">
                 <Document
                   file="relativity.pdf"
@@ -74,11 +94,12 @@ export default class PdfNotes extends React.Component {
     );
   }
 
-  addAHighlight(value){
+  showHighlight(value){
     this.setState({highlightZoneHide: value})
 
   }
   nextPage(){
+    console.log("the state here", this.state);
     if(this.state.pageNumber < this.state.numPages){
       var newPage = this.state.pageNumber;
       this.setState({pageNumber: ++newPage});
@@ -92,7 +113,21 @@ export default class PdfNotes extends React.Component {
     }
   }
 
-  onChange (e){
-    this.setState({textToConvert : e.target.value, message: null});
+  addHighlight(finalStyle){
+    var pdfContainer = document.getElementsByClassName("react-pdf__Page__textContent")[0];
+    ReactDOM.render(<Highlight styleToPass= {finalStyle} />, pdfContainer);
+    var highlights = _.cloneDeep(this.state.userHighlights);
+    var newHighlight = {page: this.state.pageNumber,
+                        highlight: finalStyle,
+                        note: this.state.textToAdd};
+
+    highlights.push(newHighlight);
+    this.setState({userHighlights: highlights});
   }
+  onChange (e) {
+    this.setState({textToAdd : e.target.value});
+  }
+
+
+
 }

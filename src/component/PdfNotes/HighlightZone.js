@@ -1,10 +1,8 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import _ from 'lodash';
+
 import './PdfNotes.css';
 import '../../shared/shared.css';
-import concatJsonIntoSring from '../../shared/utilities.js';
-import Highlight from './Highlight';
 
 export default class HighlightZone extends React.Component {
 
@@ -103,27 +101,10 @@ export default class HighlightZone extends React.Component {
   }
   onHighlightZoneUp(){
     var finalStyle = _.cloneDeep(this.state.styleDrawHighlight);
-    console.log("the highlight state", this.state.styleDrawHighlight);
     finalStyle.marginTop = parseInt(finalStyle.marginTop.split("px").join("")) + parseInt(this.state.highlightCreate.offsetTop) + "px";
     finalStyle.background = "blue";
 
-    // this.setState({
-    //   initialPoint: null,
-    //   styleDrawHighlight: {display: 'none'}
-    // });
-
-    this.props.addAHighlight(true)
-    this.addHighlight(finalStyle);
-  }
-  addHighlight(finalStyle){
-
-    var highlightText = "<div style='"+ concatJsonIntoSring(finalStyle) +"'> </div>";
-    var highlightElement = new DOMParser().parseFromString(highlightText, 'text/html');
-
-    var pdfContainer = document.getElementsByClassName("react-pdf__Page__textContent")[0];
-    ReactDOM.render(<Highlight styleToPass= {finalStyle} />, pdfContainer);
-
-
-
+    this.props.showHighlight(true)
+    this.props.addHighlight(finalStyle);
   }
 }

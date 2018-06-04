@@ -27,10 +27,10 @@ export default class ToDoList extends React.Component {
         <ul className='text-left'>
           {this.state.toDoList.map(function(item, index){
             return <li className='listItem' key={index}>
-              <input className='checkListBox' 
-                     checked={item.checked} 
-                     onClick={() => this.inputSelected(item)} 
-                     type="checkbox"/>{item.text} 
+              <input className='checkListBox'
+                     checked={item.checked}
+                     onClick={() => this.inputSelected(item)}
+                     type="checkbox"/>{item.text}
             </li>
           }, this)}
         </ul>
@@ -65,7 +65,7 @@ export default class ToDoList extends React.Component {
      var tempList = this.state.toDoList;
       tempList.push({text:text, checked: false});
       this.setState({toDoList: tempList, textToAdd: ""});
-      return tempList;     
+      return tempList;
     }
   }
 

@@ -34,5 +34,12 @@
   z-index: 200;
   color:red;
 }
+.highlightNote{
+  width: 100%;
+}
+
+.sidePdfNotes{
+  margin-top: 32px;
+}
 canvas{
 }

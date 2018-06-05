@@ -46,8 +46,9 @@ export default class PdfNotes extends React.Component {
             <Row className='pdfContainer'>
               {this.props.displayHighlightZone?
                 <HighlightZone highlightZoneSize={this.state.highlightZoneSize}
-                               showHighlight={this.showHighlight}
-                               addHighlight={this.addHighlight} />
+                               showHighlight={this.props.showHighlight}
+                               addHighlight={this.props.addHighlight}
+                               pageNumber={this.state.pageNumber}/>
               :null}
               <div className="pdfViewerContainer" id="pdfViewerContainer">
                 <Document

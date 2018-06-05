@@ -36,14 +36,14 @@ export default class PdfNotes extends React.Component {
             {this.state.userHighlights.map(function(highlight, index){
               return (
                 <Row key={index}>
-                  <Col sm={2} className='highlightPage'><a onClick={() => this.addHighlight(highlight.style, true)}> {highlight.page}</a> </Col>
-                  <Col sm={2}>{highlight.note? highlight.note : 'N/A'}</Col>
+                  <Col sm={2} className='highlightPage'><a onClick={() => this.addHighlight(highlight.style, highlight.page, true)}> {highlight.page}</a> </Col>
+                  <Col sm={8}>{highlight.note? highlight.note : 'N/A'}</Col>
                 </Row>
               )
             }, this)}
 
             {this.state.displayHighlightZone? null:
-              <a className='text-right' onClick={()=>this.showHighlight(false)}> Add highlight </a>
+              <a className='text-right' onClick={()=>this.showHighlight(true)}> Add highlight </a>
             }
             {this.state.displayHighlightZone?
               <textarea value={this.state.textToAdd}
@@ -54,7 +54,9 @@ export default class PdfNotes extends React.Component {
 
           </Col>
           <Col sm={6}>
-            <PdfViewer displayHighlightZone={this.state.displayHighlightZone}/>
+            <PdfViewer displayHighlightZone={this.state.displayHighlightZone}
+                       showHighlight={this.showHighlight}
+                       addHighlight={this.addHighlight}/>
           </Col>
         </Row>
       </Grid>
@@ -64,13 +66,13 @@ export default class PdfNotes extends React.Component {
   showHighlight(value){
     this.setState({displayHighlightZone: value})
   }
-  addHighlight(finalStyle, justDisplay){
+  addHighlight(finalStyle, page, justDisplay){
     var pdfContainer = document.getElementsByClassName("react-pdf__Page__textContent")[0];
     ReactDOM.render(<Highlight styleToPass= {finalStyle} />, pdfContainer);
 
     if(!justDisplay){
       var highlights = _.cloneDeep(this.state.userHighlights);
-      var newHighlight = {page: this.state.pageNumber, style: finalStyle,  note: this.state.textToAdd};
+      var newHighlight = {page: page, style: finalStyle,  note: this.state.textToAdd};
 
       highlights.push(newHighlight);
       this.setState({userHighlights: highlights});

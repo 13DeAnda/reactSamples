@@ -104,7 +104,7 @@ export default class HighlightZone extends React.Component {
     finalStyle.marginTop = parseInt(finalStyle.marginTop.split("px").join(""), 10) + parseInt(this.state.highlightCreate.offsetTop, 10) + "px";
     finalStyle.background = "blue";
 
-    this.props.showHighlight(true)
-    this.props.addHighlight(finalStyle);
+    this.props.showHighlight(false)
+    this.props.addHighlight(finalStyle, this.props.pageNumber);
   }
 }

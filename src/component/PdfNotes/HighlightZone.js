@@ -101,7 +101,7 @@ export default class HighlightZone extends React.Component {
   }
   onHighlightZoneUp(){
     var finalStyle = _.cloneDeep(this.state.styleDrawHighlight);
-    finalStyle.marginTop = parseInt(finalStyle.marginTop.split("px").join("")) + parseInt(this.state.highlightCreate.offsetTop) + "px";
+    finalStyle.marginTop = parseInt(finalStyle.marginTop.split("px").join(""), 10) + parseInt(this.state.highlightCreate.offsetTop, 10) + "px";
     finalStyle.background = "blue";
 
     this.props.showHighlight(true)

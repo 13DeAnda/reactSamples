@@ -11,7 +11,7 @@ export default class Highlight extends React.Component {
 
   render() {
     return (
-     <div  className='finalHighlight' style={this.props.styleToPass}></div>
+     <div  className='finalHighlight'  id="finalHighlight" style={this.props.styleToPass}></div>
     );
   }
 

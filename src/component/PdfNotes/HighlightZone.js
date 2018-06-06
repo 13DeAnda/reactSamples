@@ -63,7 +63,7 @@ export default class HighlightZone extends React.Component {
       newStyle.marginLeft = currentStyle.left + "px";
       newStyle.width = currentStyle.right - currentStyle.left + "px";
       newStyle.height = currentStyle.bottom - currentStyle.top + "px";
-      newStyle.background = "red";
+      newStyle.background = "blue";
       newStyle.opacity = ".5";
 
 
@@ -102,9 +102,9 @@ export default class HighlightZone extends React.Component {
   onHighlightZoneUp(){
     var finalStyle = _.cloneDeep(this.state.styleDrawHighlight);
     finalStyle.marginTop = parseInt(finalStyle.marginTop.split("px").join(""), 10) + parseInt(this.state.highlightCreate.offsetTop, 10) + "px";
-    finalStyle.background = "blue";
 
-    this.props.showHighlight(false)
-    this.props.addHighlight(finalStyle, this.props.pageNumber);
+    this.setState({initialPoint: null, styleDrawHighlight: {}});
+
+    this.props.addHighlight(finalStyle, this.props.pageNumber, true);
   }
 }

@@ -27,9 +27,10 @@ export default class PdfNotes extends React.Component {
       var headerHeight = document.getElementsByClassName("navbar")[0].clientHeight;
       var pdfControlersHeight = document.getElementsByClassName("pdfControlers")[0].clientHeight;
 
-      document.getElementById("pdfViewerContainer").style.height = window.innerHeight -headerHeight - pdfControlersHeight -20;
+      document.getElementById("pdfViewerContainer").style.height = window.innerHeight -headerHeight - pdfControlersHeight- 100+ "px";
 
       var pdfHeight = document.getElementById("pdfViewerContainer").clientHeight;
+
       var pdfWidth = document.getElementById("pdfViewerContainer").clientWidth;
       this.setState({numPages: res.numPages, highlightZoneSize: [pdfHeight, pdfWidth]});
     }.bind(this), 1000);
@@ -46,7 +47,6 @@ export default class PdfNotes extends React.Component {
             <Row className='pdfContainer'>
               {this.props.displayHighlightZone?
                 <HighlightZone highlightZoneSize={this.state.highlightZoneSize}
-                               showHighlight={this.props.showHighlight}
                                addHighlight={this.props.addHighlight}
                                pageNumber={this.state.pageNumber}/>
               :null}

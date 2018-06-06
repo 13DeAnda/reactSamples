@@ -4,17 +4,14 @@
 	z-index: 200;
   width: 613px;
   height: 786px;
-  background: red;
+  background: blue;
   position: absolute;
-  color: green;
   top: 0;
 }
 
 .highlightZone{
   width:612px;
   height: 792px;
-  background: green;
-  opacity:.5;
   position: absolute;
   z-index: 11;
 }
@@ -24,7 +21,6 @@
 .finalHighlight{
   position: absolute;
   z-index: 200;
-  color:red;
 }
 .highlightNote{
   width: 100%;

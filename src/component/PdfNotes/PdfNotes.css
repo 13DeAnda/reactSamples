@@ -1,0 +1,31 @@
+
+
+.highlight{
+	z-index: 200;
+  width: 613px;
+  height: 786px;
+  background: blue;
+  position: absolute;
+  top: 0;
+}
+
+.highlightZone{
+  width:612px;
+  height: 792px;
+  position: absolute;
+  z-index: 11;
+}
+
+
+
+.finalHighlight{
+  position: absolute;
+  z-index: 200;
+}
+.highlightNote{
+  width: 100%;
+}
+
+.sidePdfNotes{
+  margin-top: 32px;
+}

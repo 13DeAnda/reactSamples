@@ -1,0 +1,10 @@
+.pdfViewerContainer{
+  width: 100%;
+  position: absolute;
+  z-index: 10;
+  overflow: auto;
+}
+
+.react-pdf__Document{
+  width: fit-content !important;
+}

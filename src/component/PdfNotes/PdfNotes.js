@@ -16,7 +16,6 @@ export default class PdfNotes extends React.Component {
 
     this.onChange = this.onChange.bind(this);
     this.showHighlight = this.showHighlight.bind(this);
-    this.onChange = this.onChange.bind(this);
     this.addHighlight = this.addHighlight.bind(this);
     this.deleteNote = this.deleteNote.bind(this);
     this.saveHighlight = this.saveHighlight.bind(this);
@@ -28,29 +27,32 @@ export default class PdfNotes extends React.Component {
   }
 
   render() {
+    var {showHighlight, userHighlights, displayHighlightZone, textToAdd} = this.state;
     return (
       <Grid className="RomanNumerals">
         <Row>
           <Col className='sidePdfNotes text-center' sm={4}>
             <h3> Notes </h3>
-            {this.state.userHighlights.length === 0?
+            {userHighlights.length === 0?
               <div className ='text-center'> N/A </div>: null}
-            {this.state.userHighlights.map(function(highlight, index){
+            {userHighlights.map(function(highlight, index){
               return (
                 <Row key={index}>
-                  <Col sm={2} className='highlightPage'><a onClick={() => this.addHighlight(highlight.style, highlight.page, true)}> {highlight.page}</a> </Col>
+                  <Col sm={2} className='highlightPage'>
+                    <a onClick={() => this.addHighlight(highlight.style, highlight.page, true)}> {highlight.page}</a>
+                  </Col>
                   <Col sm={8}>{highlight.note? highlight.note : 'N/A'}</Col>
                   <Col sm={1}> <a onClick={() => this.deleteNote(index)}>X</a></Col>
                 </Row>
               )
             }, this)}
 
-            {this.state.displayHighlightZone? null:
+            {displayHighlightZone? null:
               <a className='text-right' onClick={()=>this.showHighlight(true)}> Add highlight </a>
             }
-            {this.state.displayHighlightZone?
+            {displayHighlightZone?
               <div>
-                <textarea value={this.state.textToAdd}
+                <textarea value={textToAdd}
                         className='highlightNote'
                         placeholder='add highlight note'
                         onChange={this.onChange}/>
@@ -60,7 +62,7 @@ export default class PdfNotes extends React.Component {
 
           </Col>
           <Col sm={6}>
-            <PdfViewer displayHighlightZone={this.state.displayHighlightZone}
+            <PdfViewer displayHighlightZone={displayHighlightZone}
                        addHighlight={this.addHighlight}
                        saveHighlight={this.saveHighlight}/>
           </Col>
@@ -102,7 +104,7 @@ export default class PdfNotes extends React.Component {
                      tempHighlight: null,
                      textToAdd: ""
       });
-    document.getElementById('finalHighlight').style = {};
+    document.getElementById('finalHighlight').remove();
   }
   onChange (e) {
     this.setState({textToAdd : e.target.value});

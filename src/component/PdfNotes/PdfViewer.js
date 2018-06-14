@@ -37,24 +37,26 @@ export default class PdfNotes extends React.Component {
   }
 
   render() {
+    var {previousPage, pageNumber, highlightZoneSize, numPages} = this.state;
+    const {displayHighlightZone} = this.props;
     return (
       <Grid className="RomanNumerals">
             <Row className='text-center pdfControlers'>
-              <Col xsOffset={1} sm={1} md={1}> <button onClick={this.previousPage}> previous </button> </Col>
-              <Col sm={2} md={2} className='text-center'> Page {this.state.pageNumber} of {this.state.numPages} </Col>
+              <Col xsOffset={1} sm={1} md={1}> <button onClick={previousPage}> previous </button> </Col>
+              <Col sm={2} md={2} className='text-center'> Page {pageNumber} of {numPages} </Col>
               <Col sm={1} md={1}> <button onClick={this.nextPage}> next </button> </Col>
             </Row>
             <Row className='pdfContainer'>
-              {this.props.displayHighlightZone?
-                <HighlightZone highlightZoneSize={this.state.highlightZoneSize}
+              {displayHighlightZone?
+                <HighlightZone highlightZoneSize={highlightZoneSize}
                                addHighlight={this.props.addHighlight}
-                               pageNumber={this.state.pageNumber}/>
+                               pageNumber={pageNumber}/>
               :null}
               <div className="pdfViewerContainer" id="pdfViewerContainer">
                 <Document
                   file="relativity.pdf"
                   onLoadSuccess={this.onDocumentLoad}>
-                  <Page pageNumber={this.state.pageNumber} />
+                  <Page pageNumber={pageNumber} />
                 </Document>
               </div>
             </Row>

@@ -20,6 +20,12 @@ body{
 	margin: 30px;
 }
 
+.error{
+  color: red;
+  font-size: 10px;
+  font-style: italic;
+  padding: 4px;
+}
 button{
   color: white;
   background: #5a7d55;

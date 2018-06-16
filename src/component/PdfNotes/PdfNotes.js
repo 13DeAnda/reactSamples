@@ -26,8 +26,9 @@ export default class PdfNotes extends React.Component {
     };
   }
 
+
   render() {
-    var {showHighlight, userHighlights, displayHighlightZone, textToAdd} = this.state;
+    var {userHighlights, displayHighlightZone, textToAdd, pdfPage, tempHighlight, addNoteError} = this.state;
     return (
       <Grid className="RomanNumerals">
         <Row>
@@ -48,7 +49,9 @@ export default class PdfNotes extends React.Component {
             }, this)}
 
             {displayHighlightZone? null:
-              <a className='text-right' onClick={()=>this.showHighlight(true)}> Add highlight </a>
+              <a className='text-right'
+                 onClick={()=>this.showHighlight(true)}
+                 disabled={!textToAdd}> Add highlight </a>
             }
             {displayHighlightZone?
               <div>
@@ -56,6 +59,8 @@ export default class PdfNotes extends React.Component {
                         className='highlightNote'
                         placeholder='add highlight note'
                         onChange={this.onChange}/>
+
+                {addNoteError? <div className='error'> {addNoteError} </div>:null}
                 <button onClick={this.saveHighlight}> save </button>
               </div>
             :null}
@@ -64,7 +69,8 @@ export default class PdfNotes extends React.Component {
           <Col sm={6}>
             <PdfViewer displayHighlightZone={displayHighlightZone}
                        addHighlight={this.addHighlight}
-                       saveHighlight={this.saveHighlight}/>
+                       saveHighlight={this.saveHighlight}
+                       pdfPage={pdfPage}/>
           </Col>
         </Row>
       </Grid>
@@ -92,19 +98,25 @@ export default class PdfNotes extends React.Component {
   }
 
   saveHighlight(){
-    console.log("trying to save highlights");
+    if((this.state.textToAdd && this.state.textToAdd.length > 0) || this.state.tempHighlight){
       var highlights = _.cloneDeep(this.state.userHighlights);
       var newHighlight = {page: this.state.tempHighlight.page,
                           style: this.state.tempHighlight.finalStyle,
                           note: this.state.textToAdd};
 
       highlights.push(newHighlight);
+
       this.setState({userHighlights: highlights,
                      displayHighlightZone: false,
                      tempHighlight: null,
-                     textToAdd: ""
+                     textToAdd: "",
+                     pdfPage: this.state.tempHighlight.page
       });
-    document.getElementById('finalHighlight').remove();
+
+    }
+    else{
+      this.setState({addNoteError: "*Please make sure to add at least a highlight or text"});
+    }
   }
   onChange (e) {
     this.setState({textToAdd : e.target.value});

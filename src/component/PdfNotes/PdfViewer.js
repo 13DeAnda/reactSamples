@@ -17,9 +17,19 @@ export default class PdfNotes extends React.Component {
 
     this.state = {
       pdfPath: "",
-      pageNumber: 2,
       highlightZoneSize: null,
+      pageNumber: 1
     };
+  }
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.pdfPage && nextProps.pdfPage === this.state.pageNumber){
+      this.setState({pageNumber: nextProps.pdfPage+1});
+
+      setTimeout(function() {
+        this.setState({pageNumber: nextProps.pdfPage});
+      }.bind(this), 100);
+    }
+
   }
 
   onDocumentLoad = (res) => {
@@ -43,7 +53,7 @@ export default class PdfNotes extends React.Component {
       <Grid className="RomanNumerals">
             <Row className='text-center pdfControlers'>
               <Col xsOffset={1} sm={1} md={1}> <button onClick={previousPage}> previous </button> </Col>
-              <Col sm={2} md={2} className='text-center'> Page {pageNumber} of {numPages} </Col>
+              <Col sm={2} md={2} className='text-center'> Page {pageNumber} of {numPages}</Col>
               <Col sm={1} md={1}> <button onClick={this.nextPage}> next </button> </Col>
             </Row>
             <Row className='pdfContainer'>

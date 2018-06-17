@@ -22,12 +22,15 @@ export default class PdfNotes extends React.Component {
     };
   }
   componentWillReceiveProps(nextProps) {
-    if(nextProps.pdfPage && nextProps.pdfPage === this.state.pageNumber){
-      this.setState({pageNumber: nextProps.pdfPage+1});
+    if(nextProps.pdfPage && nextProps.pdfPage === "refresh"){
+      this.setState({pageNumber: this.state.pageNumber +1});
 
       setTimeout(function() {
-        this.setState({pageNumber: nextProps.pdfPage});
+        this.setState({pageNumber: this.state.pageNumber -1});
       }.bind(this), 100);
+    }
+    else if(nextProps.pdfPage && nextProps.pdfPage !== this.state.pageNumber){
+      this.setState({pageNumber: this.state.pageNumber})
     }
 
   }
@@ -47,12 +50,12 @@ export default class PdfNotes extends React.Component {
   }
 
   render() {
-    var {previousPage, pageNumber, highlightZoneSize, numPages} = this.state;
+    var {pageNumber, highlightZoneSize, numPages} = this.state;
     const {displayHighlightZone} = this.props;
     return (
       <Grid className="RomanNumerals">
             <Row className='text-center pdfControlers'>
-              <Col xsOffset={1} sm={1} md={1}> <button onClick={previousPage}> previous </button> </Col>
+              <Col xsOffset={1} sm={1} md={1}> <button onClick={this.previousPage}> previous </button> </Col>
               <Col sm={2} md={2} className='text-center'> Page {pageNumber} of {numPages}</Col>
               <Col sm={1} md={1}> <button onClick={this.nextPage}> next </button> </Col>
             </Row>
@@ -75,7 +78,6 @@ export default class PdfNotes extends React.Component {
   }
 
   nextPage(){
-    console.log("the state here", this.state);
     if(this.state.pageNumber < this.state.numPages){
       var newPage = this.state.pageNumber;
       this.setState({pageNumber: ++newPage});

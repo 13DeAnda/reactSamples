@@ -78,14 +78,15 @@ export default class PdfNotes extends React.Component {
   }
 
   showHighlight(value){
-    this.setState({displayHighlightZone: value})
+    this.setState({displayHighlightZone: value, pdfPage: null});
   }
   addHighlight(finalStyle, page){
     if(finalStyle){
      var pdfContainer = document.getElementsByClassName("react-pdf__Page__textContent")[0];
      ReactDOM.render(<Highlight styleToPass= {finalStyle} />, pdfContainer);
      this.setState({
-        tempHighlight:{finalStyle: finalStyle, page: page}
+        tempHighlight:{finalStyle: finalStyle, page: page},
+        pdfPage: page
      });
     }
   }
@@ -104,19 +105,22 @@ export default class PdfNotes extends React.Component {
 
       var brief = textToAdd.length > 10? textToAdd.slice(0,10) +"..." : textToAdd;
 
-      var newHighlight = {page: this.state.tempHighlight.page,
+      if(this.state.tempHighlight){
+        var newHighlight = {page: this.state.tempHighlight.page,
                           style: this.state.tempHighlight.finalStyle,
                           note: textToAdd,
                           noteBrief: brief
                         };
+        highlights.push(newHighlight);
+      }
 
-      highlights.push(newHighlight);
+
 
       this.setState({userHighlights: highlights,
                      displayHighlightZone: false,
                      tempHighlight: null,
                      textToAdd: "",
-                     pdfPage: this.state.tempHighlight.page
+                     pdfPage: "refresh"
       });
 
     }
@@ -124,6 +128,7 @@ export default class PdfNotes extends React.Component {
       this.setState({addNoteError: "*Please make sure to add at least a highlight or text"});
     }
   }
+
   onChange (e) {
     this.setState({textToAdd : e.target.value});
   }

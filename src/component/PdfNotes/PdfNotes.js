@@ -16,7 +16,6 @@ export default class PdfNotes extends React.Component {
 
     this.onChange = this.onChange.bind(this);
     this.showHighlight = this.showHighlight.bind(this);
-    this.onChange = this.onChange.bind(this);
     this.addHighlight = this.addHighlight.bind(this);
     this.deleteNote = this.deleteNote.bind(this);
     this.saveHighlight = this.saveHighlight.bind(this);
@@ -27,42 +26,51 @@ export default class PdfNotes extends React.Component {
     };
   }
 
+
   render() {
+    var {userHighlights, displayHighlightZone, textToAdd, pdfPage, addNoteError} = this.state;
     return (
       <Grid className="RomanNumerals">
         <Row>
           <Col className='sidePdfNotes text-center' sm={4}>
             <h3> Notes </h3>
-            {this.state.userHighlights.length === 0?
-              <div className ='text-center'> N/A </div>: null}
-            {this.state.userHighlights.map(function(highlight, index){
-              return (
-                <Row key={index}>
-                  <Col sm={2} className='highlightPage'><a onClick={() => this.addHighlight(highlight.style, highlight.page, true)}> {highlight.page}</a> </Col>
-                  <Col sm={8}>{highlight.note? highlight.note : 'N/A'}</Col>
-                  <Col sm={1}> <a onClick={() => this.deleteNote(index)}>X</a></Col>
-                </Row>
-              )
-            }, this)}
+            {userHighlights.length === 0?
+              <div className ='text-center'> N/A </div>:
+              userHighlights.map(function(highlight, index){
+                return (
+                  <Row key={index}>
+                    <Col sm={2} className='highlightPage'>
+                      <a onClick={() => this.addHighlight(highlight.style, highlight.page, true)}> {highlight.page}</a>
+                    </Col>
+                    <Col sm={8}>{highlight.note? highlight.noteBrief : 'N/A'}</Col>
+                    <Col sm={1}> <a onClick={() => this.deleteNote(index)}>X</a></Col>
+                  </Row>
+                )
+              }, this)}
 
-            {this.state.displayHighlightZone? null:
-              <a className='text-right' onClick={()=>this.showHighlight(true)}> Add highlight </a>
+            {displayHighlightZone? null:
+              <a className='text-right'
+                 onClick={()=>this.showHighlight(true)}
+                 disabled={!textToAdd}> Add highlight </a>
             }
-            {this.state.displayHighlightZone?
+            {displayHighlightZone?
               <div>
-                <textarea value={this.state.textToAdd}
+                <textarea value={textToAdd}
                         className='highlightNote'
                         placeholder='add highlight note'
                         onChange={this.onChange}/>
+
+                {addNoteError? <div className='error'> {addNoteError} </div>:null}
                 <button onClick={this.saveHighlight}> save </button>
               </div>
             :null}
 
           </Col>
           <Col sm={6}>
-            <PdfViewer displayHighlightZone={this.state.displayHighlightZone}
+            <PdfViewer displayHighlightZone={displayHighlightZone}
                        addHighlight={this.addHighlight}
-                       saveHighlight={this.saveHighlight}/>
+                       saveHighlight={this.saveHighlight}
+                       pdfPage={pdfPage}/>
           </Col>
         </Row>
       </Grid>
@@ -70,14 +78,15 @@ export default class PdfNotes extends React.Component {
   }
 
   showHighlight(value){
-    this.setState({displayHighlightZone: value})
+    this.setState({displayHighlightZone: value, pdfPage: null});
   }
   addHighlight(finalStyle, page){
     if(finalStyle){
      var pdfContainer = document.getElementsByClassName("react-pdf__Page__textContent")[0];
      ReactDOM.render(<Highlight styleToPass= {finalStyle} />, pdfContainer);
      this.setState({
-        tempHighlight:{finalStyle: finalStyle, page: page}
+        tempHighlight:{finalStyle: finalStyle, page: page},
+        pdfPage: page
      });
     }
   }
@@ -90,20 +99,36 @@ export default class PdfNotes extends React.Component {
   }
 
   saveHighlight(){
-    console.log("trying to save highlights");
+    var textToAdd = this.state.textToAdd;
+    if((textToAdd && textToAdd.length > 0) || this.state.tempHighlight){
       var highlights = _.cloneDeep(this.state.userHighlights);
-      var newHighlight = {page: this.state.tempHighlight.page,
-                          style: this.state.tempHighlight.finalStyle,
-                          note: this.state.textToAdd};
 
-      highlights.push(newHighlight);
+      var brief = textToAdd.length > 10? textToAdd.slice(0,10) +"..." : textToAdd;
+
+      if(this.state.tempHighlight){
+        var newHighlight = {page: this.state.tempHighlight.page,
+                          style: this.state.tempHighlight.finalStyle,
+                          note: textToAdd,
+                          noteBrief: brief
+                        };
+        highlights.push(newHighlight);
+      }
+
+
+
       this.setState({userHighlights: highlights,
                      displayHighlightZone: false,
                      tempHighlight: null,
-                     textToAdd: ""
+                     textToAdd: "",
+                     pdfPage: "refresh"
       });
-    document.getElementById('finalHighlight').style = {};
+
+    }
+    else{
+      this.setState({addNoteError: "*Please make sure to add at least a highlight or text"});
+    }
   }
+
   onChange (e) {
     this.setState({textToAdd : e.target.value});
   }

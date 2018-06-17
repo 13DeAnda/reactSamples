@@ -1,6 +1,7 @@
 import React from 'react';
 import '../../shared/shared.css';
 import './ToDoList.css';
+import _ from 'lodash';
 
 export default class ToDoList extends React.Component {
   constructor(props) {
@@ -52,11 +53,12 @@ export default class ToDoList extends React.Component {
   }
   inputSelected(item){
     item.checked = !item.checked;
+    var itemsToDelete = _.cloneDeep(this.state.itemsToDelete);
     if(item.checked){
-      this.setState({itemsToDelete: ++this.state.itemsToDelete});
+      this.setState({itemsToDelete: ++itemsToDelete});
     }
     else{
-      this.setState({itemsToDelete: --this.state.itemsToDelete});
+      this.setState({itemsToDelete: --itemsToDelete});
     }
   }
 

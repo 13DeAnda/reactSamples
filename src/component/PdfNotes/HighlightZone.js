@@ -32,13 +32,14 @@ export default class HighlightZone extends React.Component {
   }
 
   render() {
+    var {styleDrawHighlight} = this.state;
     return (
       <div className='highlightZone'
            id="highlightZone"
            onMouseMove={this.onMouseDrag}
            onMouseDown={this.onHighlightZoneClick}
            onMouseUp={this.onHighlightZoneUp}>
-            <div style={this.state.styleDrawHighlight}></div>
+            <div style={styleDrawHighlight}></div>
       </div>
     );
   }

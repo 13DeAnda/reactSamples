@@ -17,9 +17,22 @@ export default class PdfNotes extends React.Component {
 
     this.state = {
       pdfPath: "",
-      pageNumber: 2,
       highlightZoneSize: null,
+      pageNumber: 1
     };
+  }
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.pdfPage && nextProps.pdfPage === "refresh"){
+      this.setState({pageNumber: this.state.pageNumber +1});
+
+      setTimeout(function() {
+        this.setState({pageNumber: this.state.pageNumber -1});
+      }.bind(this), 100);
+    }
+    else if(nextProps.pdfPage && nextProps.pdfPage !== this.state.pageNumber){
+      this.setState({pageNumber: this.state.pageNumber})
+    }
+
   }
 
   onDocumentLoad = (res) => {
@@ -37,24 +50,26 @@ export default class PdfNotes extends React.Component {
   }
 
   render() {
+    var {pageNumber, highlightZoneSize, numPages} = this.state;
+    const {displayHighlightZone} = this.props;
     return (
       <Grid className="RomanNumerals">
             <Row className='text-center pdfControlers'>
               <Col xsOffset={1} sm={1} md={1}> <button onClick={this.previousPage}> previous </button> </Col>
-              <Col sm={2} md={2} className='text-center'> Page {this.state.pageNumber} of {this.state.numPages} </Col>
+              <Col sm={2} md={2} className='text-center'> Page {pageNumber} of {numPages}</Col>
               <Col sm={1} md={1}> <button onClick={this.nextPage}> next </button> </Col>
             </Row>
             <Row className='pdfContainer'>
-              {this.props.displayHighlightZone?
-                <HighlightZone highlightZoneSize={this.state.highlightZoneSize}
+              {displayHighlightZone?
+                <HighlightZone highlightZoneSize={highlightZoneSize}
                                addHighlight={this.props.addHighlight}
-                               pageNumber={this.state.pageNumber}/>
+                               pageNumber={pageNumber}/>
               :null}
               <div className="pdfViewerContainer" id="pdfViewerContainer">
                 <Document
                   file="relativity.pdf"
                   onLoadSuccess={this.onDocumentLoad}>
-                  <Page pageNumber={this.state.pageNumber} />
+                  <Page pageNumber={pageNumber} />
                 </Document>
               </div>
             </Row>
@@ -63,7 +78,6 @@ export default class PdfNotes extends React.Component {
   }
 
   nextPage(){
-    console.log("the state here", this.state);
     if(this.state.pageNumber < this.state.numPages){
       var newPage = this.state.pageNumber;
       this.setState({pageNumber: ++newPage});

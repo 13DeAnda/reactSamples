@@ -28,25 +28,25 @@ export default class PdfNotes extends React.Component {
 
 
   render() {
-    var {userHighlights, displayHighlightZone, textToAdd, pdfPage, tempHighlight, addNoteError} = this.state;
+    var {userHighlights, displayHighlightZone, textToAdd, pdfPage, addNoteError} = this.state;
     return (
       <Grid className="RomanNumerals">
         <Row>
           <Col className='sidePdfNotes text-center' sm={4}>
             <h3> Notes </h3>
             {userHighlights.length === 0?
-              <div className ='text-center'> N/A </div>: null}
-            {userHighlights.map(function(highlight, index){
-              return (
-                <Row key={index}>
-                  <Col sm={2} className='highlightPage'>
-                    <a onClick={() => this.addHighlight(highlight.style, highlight.page, true)}> {highlight.page}</a>
-                  </Col>
-                  <Col sm={8}>{highlight.note? highlight.note : 'N/A'}</Col>
-                  <Col sm={1}> <a onClick={() => this.deleteNote(index)}>X</a></Col>
-                </Row>
-              )
-            }, this)}
+              <div className ='text-center'> N/A </div>:
+              userHighlights.map(function(highlight, index){
+                return (
+                  <Row key={index}>
+                    <Col sm={2} className='highlightPage'>
+                      <a onClick={() => this.addHighlight(highlight.style, highlight.page, true)}> {highlight.page}</a>
+                    </Col>
+                    <Col sm={8}>{highlight.note? highlight.noteBrief : 'N/A'}</Col>
+                    <Col sm={1}> <a onClick={() => this.deleteNote(index)}>X</a></Col>
+                  </Row>
+                )
+              }, this)}
 
             {displayHighlightZone? null:
               <a className='text-right'
@@ -98,11 +98,17 @@ export default class PdfNotes extends React.Component {
   }
 
   saveHighlight(){
-    if((this.state.textToAdd && this.state.textToAdd.length > 0) || this.state.tempHighlight){
+    var textToAdd = this.state.textToAdd;
+    if((textToAdd && textToAdd.length > 0) || this.state.tempHighlight){
       var highlights = _.cloneDeep(this.state.userHighlights);
+
+      var brief = textToAdd.length > 10? textToAdd.slice(0,10) +"..." : textToAdd;
+
       var newHighlight = {page: this.state.tempHighlight.page,
                           style: this.state.tempHighlight.finalStyle,
-                          note: this.state.textToAdd};
+                          note: textToAdd,
+                          noteBrief: brief
+                        };
 
       highlights.push(newHighlight);
 

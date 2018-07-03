@@ -30,7 +30,7 @@ export default class PdfNotes extends React.Component {
   render() {
     var {userHighlights, displayHighlightZone, textToAdd, pdfPage, addNoteError} = this.state;
     return (
-      <Grid className="RomanNumerals">
+      <Grid className="PdfNotes">
         <Row>
           <Col className='sidePdfNotes text-center' sm={4}>
             <h3> Notes </h3>

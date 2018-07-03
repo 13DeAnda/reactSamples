@@ -17,9 +17,13 @@ export default class WebSockets extends React.Component {
 
   render() {
     return (
-      <div>
-        this is the WebSockets sample
-      </div>
+      <Grid>
+        <Row>
+          <Col>
+            this is the WebSockets sample
+          </Col>
+        </Row>
+      </Grid>
     );
   }
 

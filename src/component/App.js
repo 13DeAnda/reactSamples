@@ -7,7 +7,7 @@ import ToDoList from './ToDoList/ToDoList';
 import WordScramble from './WordScramble/WordScramble';
 import RomanNumerals from './RomanNumerals/RomanNumerals';
 import PdfNotes from './PdfNotes/PdfNotes';
-import WebSockets from './WebSockets/WebSockets';
+import ChatRoom from './ChatRoom/ChatRoom';
 
 export default class App extends Component {
   render() {
@@ -22,7 +22,7 @@ export default class App extends Component {
             <Route path="/word-scramble" component={WordScramble}/>
             <Route path="/roman-numerals" component={RomanNumerals}/>
             <Route path="/pdf-notes" component={PdfNotes}/>
-            <Route path="/web-sockets" component={WebSockets}/>
+            <Route path="/chat-room" component={ChatRoom}/>
           </div>
         </Router>
     </div>

@@ -14,3 +14,7 @@
   padding: 15px;
   background: green;
 }
+
+.chat .messageInput{
+  width: 100%;
+}

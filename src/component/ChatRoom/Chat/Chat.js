@@ -33,7 +33,7 @@ export default class Chat extends React.Component {
             return (
               <Row key={index} className="messageItem">
                 <Col sm={3} className='text-center'>
-                  <img className='userIcon' src={message.image} /><br/>
+                  <img className='userIcon' src={message.image} alt='userImage' /><br/>
                   {message.user}
                 </Col>
                 <Col sm={8}>
@@ -47,7 +47,7 @@ export default class Chat extends React.Component {
         </Row>
         <Row className='message'>
           <Col sm={8}>
-            <input type="text" />
+            <input className='messageInput' type="text" />
           </Col>
           <Col sm={3}>
             <button> Send </button>

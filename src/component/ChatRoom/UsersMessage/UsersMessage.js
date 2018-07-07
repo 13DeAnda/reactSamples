@@ -29,7 +29,7 @@ export default class UsersMessage extends React.Component {
           {onlineUsers.map(function(user, index){
             return (
               <Row key={index} >
-                <img className='userIcon' src={user.image} /><br/>
+                <img className='userIcon' src={user.image} alt='userImage' /><br/>
               </Row>
             )
           }, this)}

@@ -28,3 +28,9 @@ Terminal 2(server):
 Test
 ---
 `npm test`
+
+
+Setup
+
+fill in database:
+node models/chatBoard.js

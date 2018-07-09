@@ -13,6 +13,8 @@ Terminal 1 (frontend):
 Terminal 2 (server):
 `cd server && npm install`
 
+To create postgress databases:
+`node models/chatBoard.js`
 
 
 Usage
@@ -30,7 +32,4 @@ Test
 `npm test`
 
 
-Setup
 
-fill in database:
-node models/chatBoard.js

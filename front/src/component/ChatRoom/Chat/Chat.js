@@ -3,7 +3,7 @@ import { Row, Col } from 'react-bootstrap';
 
 import '../../../shared/shared.css';
 import './Chat.css';
-
+import axios from 'axios';
 
 export default class Chat extends React.Component {
 
@@ -11,6 +11,8 @@ export default class Chat extends React.Component {
     super(props);
 
     this.getMessages = this.getMessages.bind(this);
+    this.addMessage = this.addMessage.bind(this);
+    this.onChange = this.onChange.bind(this);
 
     this.state = {
       chatMessages: [
@@ -47,10 +49,10 @@ export default class Chat extends React.Component {
         </Row>
         <Row className='message'>
           <Col sm={8}>
-            <input className='messageInput' type="text" />
+            <input className='messageInput' onChange={this.onChange} type="text" />
           </Col>
           <Col sm={3}>
-            <button> Send </button>
+            <button onClick={this.addMessage}> Send </button>
           </Col>
 
         </Row>
@@ -61,5 +63,21 @@ export default class Chat extends React.Component {
   getMessages(value){
   }
 
+  //change request to a service
+  addMessage(text){
+    console.log("addToMessage", this.state.textToAdd);
+    var that = this;
+    axios.post('http://localhost:4000/api/message',
+                { message : this.state.textToAdd },
+                { headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
+      })
+    .then(function(response){
+      console.log('the response gotten back', response);
+    });
+  }
+
+  onChange (e) {
+    this.setState({textToAdd : e.target.value});
+  }
 
 }

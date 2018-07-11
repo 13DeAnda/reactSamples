@@ -33,3 +33,9 @@ Test
 
 
 
+front:  localhost:3000
+server: localhost:4000
+databs: localhost:
+
+
+

@@ -13,20 +13,17 @@ export default class Chat extends React.Component {
     this.getMessages = this.getMessages.bind(this);
     this.addMessage = this.addMessage.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.getMessages = this.getMessages.bind(this);
 
     this.state = {
-      chatMessages: [
-        {user: 'anonymus 1',
-         image: "https://d30y9cdsu7xlg0.cloudfront.net/png/17241-200.png",
-         message: "this is the first test message",
-         time:  "2018-07-05T21:26:35+00:00"}
-      ],
+      chatMessages: [],
     };
   }
 
 
   render() {
     var {chatMessages} = this.state;
+
     return (
       <Row className='chat text-left'>
         <Row className='chatContainer'>
@@ -36,7 +33,7 @@ export default class Chat extends React.Component {
               <Row key={index} className="messageItem">
                 <Col sm={3} className='text-center'>
                   <img className='userIcon' src={message.image} alt='userImage' /><br/>
-                  {message.user}
+                  {message.username}
                 </Col>
                 <Col sm={8}>
                   {message.message}
@@ -65,15 +62,31 @@ export default class Chat extends React.Component {
 
   //change request to a service
   addMessage(text){
-    console.log("addToMessage", this.state.textToAdd);
-    var that = this;
-    axios.post('http://localhost:4000/api/message',
-                { message : this.state.textToAdd },
-                { headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
-      })
-    .then(function(response){
-      console.log('the response gotten back', response);
-    });
+
+      var userMessage = {
+        user: "user1",
+        image: "https://d30y9cdsu7xlg0.cloudfront.net/png/17241-200.png",
+        message: this.state.textToAdd,
+        time: "2018-07-05T21:26:35+00:00"
+      };
+      var that = this;
+      axios.post('http://localhost:4000/api/message',
+                  {data : userMessage},
+                  { headers : { "Content-Type": "application/json" }
+        })
+      .then(function(response){
+        if(response.status === 200){
+          console.log("th response", response);
+          // that.getMessages();
+        }
+      });
+  }
+  getMessages(){
+      axios.get('http://localhost:4000/api/message')
+        .then(function(response){
+          console.log("the response");
+          // this.setState({chatMessages: response.data});
+        })
   }
 
   onChange (e) {

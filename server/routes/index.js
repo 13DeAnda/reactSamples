@@ -38,7 +38,6 @@ router.post('/api/message', (req, res, next) => {
       console.log("this is the end?", results);
     });
   });
-  res.send({message: 'it pushed into the database'});
 });
 
 router.get('/api/v1/message', (req, res, next) => {

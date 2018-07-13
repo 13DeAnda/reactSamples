@@ -1,0 +1,14 @@
+.usersMessage{
+  background: lightgray;
+  height: 400px;
+  overflow-y: auto;
+  padding: 5px;
+}
+
+.usersMessage .userIcon{
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  background: white;
+  padding: 10px;
+}

@@ -13,6 +13,8 @@ Terminal 1 (frontend):
 Terminal 2 (server):
 `cd server && npm install`
 
+To create postgress databases:
+`node models/chatBoard.js`
 
 
 Usage
@@ -28,3 +30,12 @@ Terminal 2(server):
 Test
 ---
 `npm test`
+
+
+
+front:  localhost:3000
+server: localhost:4000
+databs: localhost:
+
+
+

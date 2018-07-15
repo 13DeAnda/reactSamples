@@ -11,8 +11,9 @@
 }
 
 .chat .messageItem{
-  padding: 15px;
-  background: green;
+  padding: 5px;
+  margin: 5px;
+  background: #e5f1e5;
 }
 
 .chat .messageInput{

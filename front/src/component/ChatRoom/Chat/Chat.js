@@ -7,6 +7,9 @@ import axios from 'axios';
 
 export default class Chat extends React.Component {
 
+  componentDidMount() {
+    this.getMessages();
+  }
   constructor(props) {
     super(props);
 
@@ -57,9 +60,6 @@ export default class Chat extends React.Component {
     );
   }
 
-  getMessages(value){
-  }
-
   //change request to a service
   addMessage(text){
 
@@ -76,17 +76,18 @@ export default class Chat extends React.Component {
         })
       .then(function(response){
         if(response.status === 200){
-          console.log("th response", response);
-          // that.getMessages();
+          that.setState({chatMessages: response.data})
         }
       });
   }
   getMessages(){
-      axios.get('http://localhost:4000/api/message')
-        .then(function(response){
-          console.log("the response");
-          // this.setState({chatMessages: response.data});
-        })
+    var that = this;
+    axios.get('http://localhost:4000/api/message')
+      .then(function(response){
+        if(response.status === 200){
+          that.setState({chatMessages: response.data});
+        }
+      });
   }
 
   onChange (e) {

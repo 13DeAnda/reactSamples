@@ -60,4 +60,28 @@ router.get('/api/message', (req, res, next) => {
   });
 });
 
+router.post('/api/users', (req, res, next) => {
+  var data = req.body;
+  var users = 0;
+  pg.connect(connectionString, (err, client, done) => {
+    // Handle connection errors
+    if(err) {
+      done();
+      console.log(err);
+      return res.status(500).json({success: false, data: err});
+    }
+    // SQL Query > Select Data
+    client.query('SELECT * FROM users WHERE username=($1);', [data.username], function(err, result){
+      if(result.rows.length > 0){
+        res.status(304);
+        res.send({success: false, data: "username already exist"});
+      }
+      else{
+        client.query('INSERT INTO users(username, image, password) values($1, $2, $3)', [data.username, data.image, data.password]);
+        res.send({message: "sucessfully posted"});
+      }
+    });
+  });
+});
+
 module.exports = router;

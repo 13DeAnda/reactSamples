@@ -1,9 +1,10 @@
 import React from 'react';
+import axios from 'axios';
+
 import { Row, Col } from 'react-bootstrap';
 
 import '../../../shared/shared.css';
 import './Chat.css';
-import axios from 'axios';
 
 export default class Chat extends React.Component {
 

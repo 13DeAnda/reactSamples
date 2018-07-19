@@ -1,4 +1,7 @@
 import React from 'react';
+import axios from 'axios';
+
+
 import { Row, Col } from 'react-bootstrap';
 
 import '../../../shared/shared.css';
@@ -7,26 +10,26 @@ import './UsersMessage.css';
 
 export default class UsersMessage extends React.Component {
 
+  componentDidMount() {
+    this.getUsers();
+  }
+
   constructor(props) {
     super(props);
 
-    this.getMessages = this.getMessages.bind(this);
+    this.getUsers = this.getUsers.bind(this);
 
     this.state = {
-      onlineUsers: [
-        {user: 'anonymus 1',
-         image: "https://d30y9cdsu7xlg0.cloudfront.net/png/17241-200.png"
-       }
-      ],
+      users: [],
     };
   }
 
 
   render() {
-    var {onlineUsers} = this.state
+    var {users} = this.state
     return (
       <Col className='usersMessage'>
-          {onlineUsers.map(function(user, index){
+          {users.map(function(user, index){
             return (
               <Row key={index} >
                 <img className='userIcon' src={user.image} alt='userImage' /><br/>
@@ -37,7 +40,14 @@ export default class UsersMessage extends React.Component {
     );
   }
 
-  getMessages(value){
+  getUsers(){
+    var that = this;
+    axios.get('http://localhost:4000/api/users')
+      .then(function(response){
+        if(response.status === 200){
+          that.setState({users: response.data});
+        }
+      });
   }
 
 

@@ -6,7 +6,6 @@ class Landing extends React.Component {
     return (
       <div className='landing'>
         <ul>
-      	 <li><Link to="/calculator" >Calculator</Link></li>
          <li><Link to="/to-do-list" className='toDoList'>To Do List</Link></li>
           <li><Link to="/word-scramble" className='wordScramble'>Word Scramble</Link></li>
           <li><Link to="/roman-numerals" className='romanNumerals'>Roman Numberals</Link></li>

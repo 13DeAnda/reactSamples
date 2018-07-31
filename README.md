@@ -1,41 +1,31 @@
-Requirements
----
 
- Postgress
+* install the dependencies:
 
-Installing
----
+```
+npm install
+```
 
-Terminal 1 (frontend):
-`npm install`
+* Run development server:
 
+```
+npm start
+```
 
-Terminal 2 (server):
-`cd server && npm install`
+Open the web browser to `http://localhost:8888/`
 
-To create postgress databases:
-`node models/chatBoard.js`
+### To test
+To run unit tests:
 
+```
+npm test
+```
 
-Usage
----
+Tests come bundled with:
 
-Terminal 1 (frontend):
-`npm start`
-
-Terminal 2(server):
-`npm start`
-
-
-Test
----
-`npm test`
-
-
-
-front:  localhost:3000
-server: localhost:4000
-databs: localhost:
+* Jest
+* Enzyme
+* React Test Utils
+* React Test Renderer
 
 
 

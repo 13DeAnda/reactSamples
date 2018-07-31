@@ -1,0 +1,12 @@
+.navbar{
+  background: #211f1f;
+  border-radius: 0;
+}
+
+.navbar-nav>li>.dropdown-menu{
+  border-radius: 5px;
+}
+
+.headerTitle:hover{
+  color: #7546c1 !important;
+}

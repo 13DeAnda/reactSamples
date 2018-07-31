@@ -66,7 +66,6 @@ export default class Chat extends React.Component {
         image: "https://d30y9cdsu7xlg0.cloudfront.net/png/17241-200.png",
         password: "123"
       };
-      var that = this;
       axios.post('http://localhost:4000/api/users',
                   {data : userMessage},
                   { headers : { "Content-Type": "application/json" }

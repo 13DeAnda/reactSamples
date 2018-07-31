@@ -38,9 +38,9 @@ export default class WordScramble extends React.Component {
               Time left: {this.state.timerCount}
               <ReactInterval timeout={1000} enabled={this.state.enabled} callback={this.interval} />
             </div>
-            <button className='skipButton' onClick={this.getWord}> Skip Word </button> 
+            <button className='skipButton' onClick={this.getWord}> Skip Word </button>
         </Row>
-        <Row className="text-center"> 
+        <Row className="text-center">
           <input type="text" className='userTextBox' placeholder='Type your word' value={this.state.userWord} onChange={this.onChange}/>
         </Row>
        <Row className="scrambledWordContainer text-center">
@@ -71,18 +71,20 @@ export default class WordScramble extends React.Component {
   }
 
   getWord(word) {
-    console.log("getting the word", word);
     //expects a word when its called on test only
     if(word && typeof word === "string"){
       this.scrambleText(word);
     }
     else{
       var that = this;
-      axios.get('http://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&includePartOfSpeech=adverb&excludePartOfSpeech=verb&minCorpusCount=0&maxCorpusCount=-1&minDictionaryCount=1&maxDictionaryCount=-1&minLength=5&maxLength=8&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5')
-        .then(function(response){
-          that.scrambleText(response.data.word);
-          console.log("the word ", response.data.word);
-        })      
+      // axios.get('http://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&includePartOfSpeech=adverb&excludePartOfSpeech=verb&minCorpusCount=0&maxCorpusCount=-1&minDictionaryCount=1&maxDictionaryCount=-1&minLength=5&maxLength=8&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5')
+      // .then(function(response){
+      //   //API is no longer working, but sampling purposes
+      //   // that.scrambleText(response.data.word);
+      //   that.scrambleText("responsible");
+      //   console.log("the word ", response.data.word);
+      // });
+      that.scrambleText("responsible");
     }
 
   }
@@ -102,8 +104,8 @@ export default class WordScramble extends React.Component {
       }
     }
 
-    var toUpdate = {scrambledWord: scrambledWord, 
-                   correctWord: word, 
+    var toUpdate = {scrambledWord: scrambledWord,
+                   correctWord: word,
                    scrambledWordObjCopy: scrambledWordTemp,
                    scrambledWordObj: scrambledWordTemp,
                    gameOver: false};
@@ -134,7 +136,7 @@ export default class WordScramble extends React.Component {
           inWordText += item.letter;
           return false
         }
-      });     
+      });
     });
     this.setState({userWord: inWordText, usedLetters: usedLetters, scrambledWordObj: scrambledWordObjTemp});
     this.checkIfCorrect(newText);
@@ -144,14 +146,14 @@ export default class WordScramble extends React.Component {
     if(newText === this.state.correctWord){
       var score = _.cloneDeep(this.state.score);
       this.setState({score: ++score, message: "correct"});
-      setTimeout(function() { 
+      setTimeout(function() {
         this.setState({message: "", usedLetters: [], userWord: ""});
         this.getWord();
       }.bind(this), 2000);
     }
     else if(newText.length === this.state.correctWord.length){
       this.setState({message: "incorrect"});
-      setTimeout(function() { 
+      setTimeout(function() {
         this.setState({message: ""});
       }.bind(this), 2000);
     }

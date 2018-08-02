@@ -2,6 +2,7 @@ import React from 'react';
 import '../../shared/shared.css';
 import './ToDoList.css';
 import _ from 'lodash';
+import { Grid, Row, Glyphicon } from 'react-bootstrap';
 
 export default class ToDoList extends React.Component {
   constructor(props) {
@@ -19,26 +20,31 @@ export default class ToDoList extends React.Component {
 
   render() {
     return (
-      <div className='container text-center'>
-        <div className='title'> To Do List </div>
-        <div>
+      <Grid className='container'>
+        <Row className='title text-center'> To Do List </Row>
+        <Row className="text-center">
           <input type="text" value={this.state.textToAdd} onChange={this.onChange} className='addInput'/>
           <button  onClick={() => this.addToList(this.state.textToAdd)} className='addButton'> Add To List </button>
-        </div>
-        <ul className='text-left'>
-          {this.state.toDoList.map(function(item, index){
-            return <li className='listItem' key={index}>
-              <input className='checkListBox'
-                     checked={item.checked}
-                     onClick={() => this.inputSelected(item)}
-                     type="checkbox"/>{item.text}
-            </li>
-          }, this)}
-        </ul>
-        {this.state.itemsToDelete?
-          <button  onClick={this.deleteSelected} className='deleteButton'> Delete Selected </button>
-          :null}
-      </div>
+        </Row>
+        <Row className="listContainer text-left">
+          <ul >
+            {this.state.toDoList.map(function(item, index){
+              return <li className='listItem' key={index}>
+                <input className='checkListBox'
+                       checked={item.checked}
+                       onClick={() => this.inputSelected(item)}
+                       type="checkbox"/>{item.text}
+              </li>
+            }, this)}
+          </ul>
+          {this.state.itemsToDelete?
+            <button  onClick={this.deleteSelected}
+                     className='deleteButton'> Delete
+              <Glyphicon glyph="trash" />
+                     </button>
+            :null}
+        </Row>
+      </Grid>
     );
   }
 

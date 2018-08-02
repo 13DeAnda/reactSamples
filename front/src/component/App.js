@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {BrowserRouter as Router,Route} from 'react-router-dom';
-import Calculator from './Calculator/Calculator';
 import Header from './Header/Header';
 import Landing from './Landing/Landing';
 import ToDoList from './ToDoList/ToDoList';
@@ -17,7 +16,6 @@ export default class App extends Component {
         <Router>
           <div>
             <Route exact path="/" component={Landing}/>
-            <Route path="/calculator" component={Calculator}/>
             <Route path="/to-do-list" component={ToDoList}/>
             <Route path="/word-scramble" component={WordScramble}/>
             <Route path="/roman-numerals" component={RomanNumerals}/>

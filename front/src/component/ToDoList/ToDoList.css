@@ -3,8 +3,16 @@
   font-size: 20px;
   font-family: cursive;
   list-style: none;
-  margin-left: 10%;
+  color: #6a54a5;
 }
-.checkListBox{
-  margin-left: 10px !important;
+
+.deleteButton{
+  font-size: 10px;
+  margin-top: 10px;
+  margin-left: 36px !important;
+
+}
+
+.listContainer{
+  margin-left: 10%;
 }

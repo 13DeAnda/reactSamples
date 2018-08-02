@@ -1,6 +1,6 @@
 body{
 	background: white;
-  color: #eeeaf5;
+  color: #6a54a5;
 }
 
 .hidden{
@@ -58,7 +58,7 @@ input:focus{
 
 .title{
   font-size: 27px;
-  color: #534c65;
+  color: #514277;
   font-style: oblique;
 }
 
@@ -69,6 +69,18 @@ a{
 a:active, a:hover{
   color: #7546c1;
 }
+
+.container input:checked ~ .checkmark {
+    background-color: red !important;
+}
+
+
+
+input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+
 
 
 

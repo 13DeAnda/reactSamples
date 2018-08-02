@@ -56,6 +56,7 @@ export default class RomanNumerals extends React.Component {
       var letterObj = this.state.romanNumbers[letter];
       if(!letterObj){
         this.setState({message: "Invalid Input", converted: null});
+        return "Invalid Input";
         break;
       }
 

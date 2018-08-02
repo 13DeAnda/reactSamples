@@ -22,7 +22,7 @@ describe('RomanNumerals component', () => {
     wrapper.find('.convertButton').simulate('click');
     expect(wrapper.state().converted).toEqual(5);
   });
-  
+
   it('adds a number and converts it to number', function(){
     var textToAdd = '5';
     wrapper.find('.textInput').simulate('change', {target: {value: textToAdd}});

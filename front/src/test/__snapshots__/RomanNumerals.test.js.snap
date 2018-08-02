@@ -2,14 +2,20 @@
 
 exports[`RomanNumerals component should render snapshot 1`] = `
 <div
-  className="container-fluid RomanNumerals container"
+  className="RomanNumerals container text-center container"
 >
   <div
-    className="text-center row"
+    className="title row"
+  >
+     Convert Roman Numbers 
+  </div>
+  <div
+    className="row"
   >
     <input
       className="textInput"
       onChange={[Function]}
+      placeholder="ex: XV or ex: 15"
       type="text"
       value=""
     />
@@ -22,7 +28,7 @@ exports[`RomanNumerals component should render snapshot 1`] = `
     </button>
     <br />
     <div
-      className="convertedValue text-center row"
+      className="convertedValue row"
     >
       
     </div>

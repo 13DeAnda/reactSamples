@@ -12,6 +12,7 @@ export default class RomanNumerals extends React.Component {
     this.romanToNumber = this.romanToNumber.bind(this);
     this.numberToRoman = this.numberToRoman.bind(this);
     this.convert = this.convert.bind(this);
+
     this.state = {
       textToConvert: "",
       converted: "",
@@ -29,11 +30,13 @@ export default class RomanNumerals extends React.Component {
 
   render() {
     return (
-      <Grid className="container-fluid RomanNumerals">
-        <Row className="text-center">
-          <input type="text" value={this.state.textToConvert} onChange={this.onChange} className='textInput'/><br/>
-          <button onClick={this.convert} className='convertButton'> Convert Numer </button><br/>
-          <Row className='convertedValue text-center'>
+      <Grid className="RomanNumerals container text-center" >
+        <Row className='title'> Convert Roman Numbers </Row>
+        <Row>
+          <input type="text" value={this.state.textToConvert} placeholder= "ex: XV or ex: 15" onChange={this.onChange} className='textInput'/><br/>
+          <button onClick={this.convert}
+                  className='convertButton'> Convert Numer </button><br/>
+          <Row className={this.state.message? 'convertedValue error' : 'convertedValue'} >
             {this.state.message? this.state.message :this.state.converted}
           </Row>
         </Row>
@@ -41,6 +44,7 @@ export default class RomanNumerals extends React.Component {
     );
   }
 
+  //logic
   romanToNumber (valueToConvert){
     valueToConvert = valueToConvert.toUpperCase();
     var finalConvertedNumber = 0;
@@ -57,9 +61,9 @@ export default class RomanNumerals extends React.Component {
 
       var nextLetterObj = nextLetter? this.state.romanNumbers[nextLetter] : null;
 
-      if(nextLetter && 
-        letterObj.isExtractor && 
-        nextLetterObj.extractor && 
+      if(nextLetter &&
+        letterObj.isExtractor &&
+        nextLetterObj.extractor &&
         nextLetterObj.extractor.roman === letter){
 
           finalConvertedNumber += (nextLetterObj.number - letterObj.number);
@@ -87,7 +91,7 @@ export default class RomanNumerals extends React.Component {
         else{
           romanNumber += key + item.grouped;
         }
-        
+
       }
     });
     return romanNumber;
@@ -107,7 +111,7 @@ export default class RomanNumerals extends React.Component {
   }
 
   onChange (e){
-    this.setState({textToConvert : e.target.value, message: null}); 
+    this.setState({textToConvert : e.target.value, message: null, converted: null});
   }
 
 }

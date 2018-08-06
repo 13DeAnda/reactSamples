@@ -44,12 +44,6 @@ button:focus, button:hover {
   outline-color:#7546c1;
 }
 
-input{
-  border-radius: 5px;
-  margin-left: 10px;
-  font-color: #4b6d56;
-  color: #534c65;
-}
 
 input:focus{
   outline-color:#7546c1;

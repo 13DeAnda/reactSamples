@@ -3,7 +3,7 @@ import axios from 'axios';
 import _ from 'lodash';
 import '../../shared/shared.css';
 import './WorldScramble.css';
-import { Grid, Row, Modal, Button } from 'react-bootstrap';
+import { Grid, Row, Modal} from 'react-bootstrap';
 import ReactInterval from 'react-interval';
 export default class WordScramble extends React.Component {
 
@@ -29,47 +29,52 @@ export default class WordScramble extends React.Component {
     };
   }
 
+  componentDidMount(){
+    this.getWord("responsible");
+  }
+
   render() {
+    var {enabled, scrambledWord, scrambledWordObj,
+         message, usedLetters, userWord, timerCount, score} = this.state
     return (
-      <Grid className="container-fluid WordScramble">
-        {this.state.scrambledWord.length === 0 && !this.state.enabled? this.getWord() : null}
-        <Row className="text-rigth">
+      <Grid className="container WordScramble text-center">
+        <Row className={scrambledWord? 'text-right' : 'hidden'}>
             <div className='counterContainer'>
-              Time left: {this.state.timerCount}
-              <ReactInterval timeout={1000} enabled={this.state.enabled} callback={this.interval} />
+              Time left: {timerCount}
+              <ReactInterval timeout={1000} enabled={enabled} callback={this.interval} />
             </div>
             <button className='skipButton' onClick={this.getWord}> Skip Word </button>
         </Row>
-        <Row className="text-center">
-          <input type="text" className='userTextBox' placeholder='Type your word' value={this.state.userWord} onChange={this.onChange}/>
+        <Row className={scrambledWord? '' : 'hidden'}>
+          <input type="text" className='userTextBox' placeholder='Type your word' value={userWord} onChange={this.onChange}/>
         </Row>
-       <Row className="scrambledWordContainer text-center">
-          {this.state.usedLetters.map(function(item, index){
+       <Row className="scrambledWordContainer">
+          {usedLetters.map(function(item, index){
             return <div className ='letterBox foundLetter' key={index}>{item.letter} </div>
           })}
 
-          {this.state.scrambledWordObj.map(function(item, index){
-            return <div className = {item.used? 'hide' : 'letterBox'} key={index}>{item.letter} </div>
+          {scrambledWordObj.map(function(item, index){
+            return <div className = {item.used? 'hidden' : 'letterBox'} key={index}>{item.letter} </div>
           })}
         </Row>
-        <Row className="text-center score">
-          matches:  {this.state.score}
+        <Row className={score.length > 0 ? 'score' : 'hidden'}>
+          matches:  {score}
         </Row>
-        <Row className={this.state.message}>
-          {this.state.message.length >0?
-            this.state.message: null}
+        <Row className={message}>
+          {message.length >0?
+            message: null}
         </Row>
 
         <Modal show={this.state.gameOver} onHide={this.getWord}>
-          <Modal.Body className='text-center score'>
-              your score: {this.state.score} <br/>
-              <Button className='restartButton' onClick={this.getWord}>Start Over</Button>
+          <Modal.Body className='score text-center'>
+              <div className="content"> Your Score: {this.state.score} </div> <br/>
+              <button className='restartButton' onClick={this.getWord}>Start Over</button>
           </Modal.Body>
         </Modal>
       </Grid>
     );
   }
-
+  //logic
   getWord(word) {
     //expects a word when its called on test only
     if(word && typeof word === "string"){
@@ -77,20 +82,22 @@ export default class WordScramble extends React.Component {
     }
     else{
       var that = this;
-      // axios.get('http://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&includePartOfSpeech=adverb&excludePartOfSpeech=verb&minCorpusCount=0&maxCorpusCount=-1&minDictionaryCount=1&maxDictionaryCount=-1&minLength=5&maxLength=8&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5')
-      // .then(function(response){
-      //   //API is no longer working, but sampling purposes
-      //   // that.scrambleText(response.data.word);
-      //   that.scrambleText("responsible");
-      //   console.log("the word ", response.data.word);
-      // });
-      that.scrambleText("responsible");
+      axios.get('http://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&includePartOfSpeech=adverb&excludePartOfSpeech=verb&minCorpusCount=0&maxCorpusCount=-1&minDictionaryCount=1&maxDictionaryCount=-1&minLength=5&maxLength=8&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5')
+      .then(function(response){
+        if(response.state === 200){
+          that.scrambleText(response.data.word);
+        }
+      })
+      .catch(function (error) {
+        that.setState({message: "An error occurred with the API request",
+                       correctWord: null,
+                       scrambledWordObj: [],
+                       scrambledWord: null});
+      });
     }
-
   }
 
   scrambleText (word){
-    console.log("scrambling text again");
     var scrambledWord = "";
     var usedIndex = {};
     var scrambledWordTemp = [];
@@ -116,11 +123,6 @@ export default class WordScramble extends React.Component {
     }
     this.setState(toUpdate);
     return scrambledWord;
-  }
-
-  onChange(e){
-    const newText = e.target.value;
-    this.checkForLetter(newText);
   }
 
   checkForLetter(newText){
@@ -166,5 +168,10 @@ export default class WordScramble extends React.Component {
     else{
       this.setState({enabled: false, gameOver: true});
     }
+  }
+
+  onChange(e){
+    const newText = e.target.value;
+    this.checkForLetter(newText);
   }
 }

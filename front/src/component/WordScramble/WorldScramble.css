@@ -1,83 +1,70 @@
 
-.WordScramble{
-  padding: 50px;
-}
-.letterBox{
+.WordScramble .letterBox{
   height: 40px;
   width: 40px;
   display: inline;
   padding: 18px;
   margin: 15px;
   border-radius: 5px;
-  background-color: beige;
+  background-color: #ebdcf5b8;
   font-weight: bold;
 }
 
-.scrambledWordContainer{
+.WordScramble .scrambledWordContainer{
   margin-top: 30px;
   margin-bottom: 30px;
 }
 
-.foundLetter{
-  background: #93bd79;
+.WordScramble .foundLetter{
+  background: #610a9ab8;
+  color: white;
 }
 
-.hide{
-  display: none;
-}
 
-.skipButton{
+.WordScramble .skipButton{
   font-size: 11px;
-  color: white;
-  background: #5a7d55;
   padding: 5px;
-  border-radius: 5px;
-  margin-right: 24px;
-}
-.restartButton{
-  font-size: 17px;
-  font-weight: normal;
-  text-shadow: none;
-  color: white;
-  background: #5a7d55;
-  padding: 5px;
-  border-radius: 5px;
   margin-right: 24px;
 }
 
-
-.score{
+.WordScramble .score{
   font-size: 20px;
-  color: #1e651e;
 }
 
-.userTextBox{
+.WordScramble .userTextBox{
     border-radius: 5px;
     width: 300px;
     height: 50px;
     font-size: 20px;
     padding: 5px;
     text-align: center;
-    color: #5e987b;
+    border-color: purple;
+
     border-top: none;
     border-left: none;
-    border-color: #5a7d55;
     border-right: none;
 }
-.counterContainer{
+.WordScramble .counterContainer{
   font-size: 20px;
-  color: green;
 }
-.correct{
-  color: green;
-  font-size: 20px;
-  text-align: center;
+
+.WordScramble .correct{
+  color: #5e2184;
+  font-size: 30px;
+  text-shadow: 1px 1px #a99999;
 }
-.incorrect{
-  font-size: 20px;
+.WordScramble .incorrect{
   color: red;
-  text-align: center;
+  font-size: 30px;
+  text-shadow: 1px 1px #a99999;
 }
+
+.WordScramble input:focus{
+  outline-color: white;
+}
+
 .modal-content{
-  margin-top: 50% !important;
+  margin-top: 30% !important;
+  font-size: 20px;
+
 }

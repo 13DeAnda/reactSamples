@@ -2,13 +2,15 @@
 .WordScramble .letterBox{
   height: 40px;
   width: 40px;
-  display: inline;
-  padding: 18px;
-  margin: 15px;
+  display: inline-block;
+  padding: 10px;
+  margin: 1%;
   border-radius: 5px;
   background-color: #ebdcf5b8;
   font-weight: bold;
 }
+
+
 
 .WordScramble .scrambledWordContainer{
   margin-top: 30px;

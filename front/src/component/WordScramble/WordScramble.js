@@ -54,8 +54,13 @@ export default class WordScramble extends React.Component {
           })}
 
           {scrambledWordObj.map(function(item, index){
-            return <div className = {item.used? 'hidden' : 'letterBox'} key={index}>{item.letter} </div>
-          })}
+            return <div className = {item.used? 'hidden' : 'letterBox'}
+                        key={index}
+                        onClick={this.onChange}
+                        value={item.letter}>
+              {item.letter}
+            </div>
+          }.bind(this))}
         </Row>
         <Row className={score.length > 0 ? 'score' : 'hidden'}>
           matches:  {score}
@@ -117,10 +122,10 @@ export default class WordScramble extends React.Component {
                    scrambledWordObj: scrambledWordTemp,
                    gameOver: false};
 
-    if(!this.state.enabled){
-      toUpdate.enabled = true;
-      toUpdate.timerCount = 60;
-    }
+    // if(!this.state.enabled){
+    //   toUpdate.enabled = true;
+    //   toUpdate.timerCount = 60;
+    // }
     this.setState(toUpdate);
     return scrambledWord;
   }
@@ -171,7 +176,7 @@ export default class WordScramble extends React.Component {
   }
 
   onChange(e){
-    const newText = e.target.value;
+    const newText = e.target.value? e.target.value :this.state.userWord + e.target.getAttribute('value');
     this.checkForLetter(newText);
   }
 }

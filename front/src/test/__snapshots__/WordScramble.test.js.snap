@@ -1,0 +1,125 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WordScramble component should render snapshot 1`] = `
+<div
+  className="container WordScramble text-center container"
+>
+  <div
+    className="text-right row"
+  >
+    <div
+      className="counterContainer"
+    >
+      Time left: 
+      60
+    </div>
+    <button
+      className="skipButton"
+      onClick={[Function]}
+    >
+       Skip Word 
+    </button>
+  </div>
+  <div
+    className="row"
+  >
+    <input
+      className="userTextBox"
+      onChange={[Function]}
+      placeholder="Type your word"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    className="scrambledWordContainer row"
+  >
+    <div
+      className="letterBox toUseLetter"
+      onClick={[Function]}
+      value="e"
+    >
+      e
+    </div>
+    <div
+      className="letterBox toUseLetter"
+      onClick={[Function]}
+      value="e"
+    >
+      e
+    </div>
+    <div
+      className="letterBox toUseLetter"
+      onClick={[Function]}
+      value="r"
+    >
+      r
+    </div>
+    <div
+      className="letterBox toUseLetter"
+      onClick={[Function]}
+      value="p"
+    >
+      p
+    </div>
+    <div
+      className="letterBox toUseLetter"
+      onClick={[Function]}
+      value="l"
+    >
+      l
+    </div>
+    <div
+      className="letterBox toUseLetter"
+      onClick={[Function]}
+      value="s"
+    >
+      s
+    </div>
+    <div
+      className="letterBox toUseLetter"
+      onClick={[Function]}
+      value="b"
+    >
+      b
+    </div>
+    <div
+      className="letterBox toUseLetter"
+      onClick={[Function]}
+      value="n"
+    >
+      n
+    </div>
+    <div
+      className="letterBox toUseLetter"
+      onClick={[Function]}
+      value="o"
+    >
+      o
+    </div>
+    <div
+      className="letterBox toUseLetter"
+      onClick={[Function]}
+      value="s"
+    >
+      s
+    </div>
+    <div
+      className="letterBox toUseLetter"
+      onClick={[Function]}
+      value="i"
+    >
+      i
+    </div>
+  </div>
+  <div
+    className="hidden row"
+  >
+    matches:  
+    0
+  </div>
+  <div
+    className="row"
+  />
+</div>
+`;

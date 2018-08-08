@@ -30,6 +30,7 @@ export default class WordScramble extends React.Component {
   }
 
   componentDidMount(){
+    //external api broken, for display purposes one word
     this.getWord("responsible");
   }
 
@@ -54,7 +55,7 @@ export default class WordScramble extends React.Component {
           })}
 
           {scrambledWordObj.map(function(item, index){
-            return <div className = {item.used? 'hidden' : 'letterBox'}
+            return <div className = {item.used? 'hidden' : 'letterBox toUseLetter'}
                         key={index}
                         onClick={this.onChange}
                         value={item.letter}>
@@ -83,14 +84,14 @@ export default class WordScramble extends React.Component {
   getWord(word) {
     //expects a word when its called on test only
     if(word && typeof word === "string"){
-      this.scrambleText(word);
+      return this.scrambleText(word);
     }
     else{
       var that = this;
       axios.get('http://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&includePartOfSpeech=adverb&excludePartOfSpeech=verb&minCorpusCount=0&maxCorpusCount=-1&minDictionaryCount=1&maxDictionaryCount=-1&minLength=5&maxLength=8&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5')
       .then(function(response){
         if(response.state === 200){
-          that.scrambleText(response.data.word);
+          return that.scrambleText(response.data.word);
         }
       })
       .catch(function (error) {
@@ -98,6 +99,7 @@ export default class WordScramble extends React.Component {
                        correctWord: null,
                        scrambledWordObj: [],
                        scrambledWord: null});
+        return ;
       });
     }
   }
@@ -114,6 +116,13 @@ export default class WordScramble extends React.Component {
         scrambledWord += word[randomIndex];
         scrambledWordTemp.push({letter: word[randomIndex], used: false})
       }
+
+      //in case the final word was the original
+      if(scrambledWord.length === word.length && scrambledWord === word){
+        usedIndex = [];
+        scrambledWordTemp = [];
+        scrambledWord = "";
+      }
     }
 
     var toUpdate = {scrambledWord: scrambledWord,
@@ -122,10 +131,10 @@ export default class WordScramble extends React.Component {
                    scrambledWordObj: scrambledWordTemp,
                    gameOver: false};
 
-    // if(!this.state.enabled){
-    //   toUpdate.enabled = true;
-    //   toUpdate.timerCount = 60;
-    // }
+    if(!this.state.enabled){
+      toUpdate.enabled = true;
+      toUpdate.timerCount = 60;
+    }
     this.setState(toUpdate);
     return scrambledWord;
   }
@@ -176,7 +185,7 @@ export default class WordScramble extends React.Component {
   }
 
   onChange(e){
-    const newText = e.target.value? e.target.value :this.state.userWord + e.target.getAttribute('value');
+    const newText = typeof e.target.value === "string"? e.target.value :this.state.userWord + e.target.getAttribute('value');
     this.checkForLetter(newText);
   }
 }

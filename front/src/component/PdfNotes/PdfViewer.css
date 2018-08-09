@@ -1,10 +1,19 @@
-.pdfViewerContainer{
+.pdfViewer .pdfViewerContainer{
   width: 100%;
   position: absolute;
   z-index: 10;
   overflow: auto;
 }
 
-.react-pdf__Document{
+.pdfViewer .react-pdf__Document{
   width: fit-content !important;
+}
+
+.pdfViewer button{
+  width: 70px;
+}
+
+.pdfViewer .pdfControlers{
+  margin-bottom: 10px;
+  margin-top: 10px;
 }

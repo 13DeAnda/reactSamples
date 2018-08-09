@@ -66,12 +66,10 @@ export default class PdfNotes extends React.Component {
             :null}
 
           </Col>
-          <Col sm={6}>
-            <PdfViewer displayHighlightZone={displayHighlightZone}
-                       addHighlight={this.addHighlight}
-                       saveHighlight={this.saveHighlight}
-                       pdfPage={pdfPage}/>
-          </Col>
+          <PdfViewer displayHighlightZone={displayHighlightZone}
+                     addHighlight={this.addHighlight}
+                     saveHighlight={this.saveHighlight}
+                     pdfPage={pdfPage}/>
         </Row>
       </Grid>
     );

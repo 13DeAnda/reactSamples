@@ -45,10 +45,13 @@ button:focus, button:hover {
 }
 
 
-input:focus{
+input:focus, textarea:focus{
   outline-color:#7546c1;
 }
 
+textarea{
+  padding: 5px;
+}
 
 .title{
   font-size: 27px;
@@ -63,18 +66,6 @@ a{
 a:active, a:hover{
   color: #7546c1;
 }
-
-.container input:checked ~ .checkmark {
-    background-color: red !important;
-}
-
-
-
-input[type="checkbox"] {
-  margin-right: 10px;
-}
-
-
 
 
 

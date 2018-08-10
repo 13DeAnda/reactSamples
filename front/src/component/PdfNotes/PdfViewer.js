@@ -9,6 +9,7 @@ import HighlightZone from './HighlightZone';
 
 export default class PdfNotes extends React.Component {
 
+
   constructor(props) {
     super(props);
 
@@ -32,6 +33,12 @@ export default class PdfNotes extends React.Component {
     }
     else if(nextProps.pdfPage && nextProps.pdfPage !== this.state.pageNumber){
       this.setState({pageNumber: this.state.pageNumber})
+    }
+  }
+  componentWillUpdate(nextProps, nextState){
+
+    if(!this.props.pdfPage || (nextState.pageNumber !== this.state.pageNumber)){
+      this.props.updatePdfPage(this.state.pageNumber);
     }
 
   }

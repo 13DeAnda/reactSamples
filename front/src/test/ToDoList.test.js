@@ -20,7 +20,7 @@ describe('ToDoList component', () => {
     wrapper.find('.addInput').simulate('change', {target: {value: textToAdd}});
     expect(wrapper.state().textToAdd).toEqual(textToAdd);
   });
-  
+
   it('clicks button to addToList and expects item to show on list state', function(){
     wrapper.find('.addButton').simulate('click');
     expect(wrapper.state().toDoList.length).toEqual(1);

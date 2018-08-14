@@ -19,64 +19,75 @@ export default class PdfNotes extends React.Component {
     this.addHighlight = this.addHighlight.bind(this);
     this.deleteNote = this.deleteNote.bind(this);
     this.saveHighlight = this.saveHighlight.bind(this);
+    this.updatePdfPage = this.updatePdfPage.bind(this);
 
     this.state = {
-      userHighlights: [],
+      userNotes: [],
       displayHighlightZone: false
     };
   }
 
-
   render() {
-    var {userHighlights, displayHighlightZone, textToAdd, pdfPage, addNoteError} = this.state;
+    var {userNotes, displayHighlightZone, textToAdd, pdfPage, addNoteError} = this.state;
     return (
-      <Grid className="PdfNotes">
+      <Grid className="pdfNotes">
         <Row>
           <Col className='sidePdfNotes text-center' sm={4}>
-            <h3> Notes </h3>
-            {userHighlights.length === 0?
-              <div className ='text-center'> N/A </div>:
-              userHighlights.map(function(highlight, index){
-                return (
-                  <Row key={index}>
-                    <Col sm={2} className='highlightPage'>
-                      <a onClick={() => this.addHighlight(highlight.style, highlight.page, true)}> {highlight.page}</a>
-                    </Col>
-                    <Col sm={8}>{highlight.note? highlight.noteBrief : 'N/A'}</Col>
-                    <Col sm={1}> <a onClick={() => this.deleteNote(index)}>X</a></Col>
-                  </Row>
-                )
-              }, this)}
+            <Row className='notesHeader'>
+              <Col sm={6} className='text-left'>
+                <b>Notes</b>
+              </Col>
+              <Col sm={6} className='text-right'>
+                {displayHighlightZone? null:
+                  <a onClick={()=>this.showHighlight(true)} disabled={!textToAdd}>
+                    Add Note </a>
+                }
+              </Col>
+            </Row>
+            <Row className="notesContainer">
+              {displayHighlightZone?
+                <div>
+                <div className='text-right'>
+                  <a className='text-right'
+                     onClick={()=>this.showHighlight(false)}
+                     disabled={!textToAdd}> X </a>
+                </div>
 
-            {displayHighlightZone? null:
-              <a className='text-right'
-                 onClick={()=>this.showHighlight(true)}
-                 disabled={!textToAdd}> Add highlight </a>
-            }
-            {displayHighlightZone?
-              <div>
-                <textarea value={textToAdd}
-                        className='highlightNote'
-                        placeholder='add highlight note'
-                        onChange={this.onChange}/>
+                  <textarea value={textToAdd}
+                          className='highlightNote'
+                          placeholder='add highlight note'
+                          onChange={this.onChange}/>
 
-                {addNoteError? <div className='error'> {addNoteError} </div>:null}
-                <button onClick={this.saveHighlight}> save </button>
-              </div>
-            :null}
+                  {addNoteError? <div className='error'> {addNoteError} </div>:null}
+                  <button onClick={this.saveHighlight}> save </button>
+                </div>
+              :null}
+              {userNotes.length === 0?
+                <div className ={displayHighlightZone? 'hidden' : 'text-center'}> N/A </div>:
+                userNotes.map(function(highlight, index){
+                  return (
+                    <Row key={index}>
+                      <Col sm={2} className='highlightPage'>
+                        <a onClick={() => this.addHighlight(highlight.style, highlight.page, true)}> {highlight.page}</a>
+                      </Col>
+                      <Col sm={8}>{highlight.note? highlight.noteBrief : 'N/A'}</Col>
+                      <Col sm={1}> <a onClick={() => this.deleteNote(index)}>X</a></Col>
+                    </Row>
+                  )
+                }, this)}
+            </Row>
 
           </Col>
-          <Col sm={6}>
-            <PdfViewer displayHighlightZone={displayHighlightZone}
-                       addHighlight={this.addHighlight}
-                       saveHighlight={this.saveHighlight}
-                       pdfPage={pdfPage}/>
-          </Col>
+          <PdfViewer displayHighlightZone={displayHighlightZone}
+                     addHighlight={this.addHighlight}
+                     saveHighlight={this.saveHighlight}
+                     updatePdfPage={this.updatePdfPage}
+                     pdfPage={pdfPage}/>
         </Row>
       </Grid>
     );
   }
-
+  //logic
   showHighlight(value){
     this.setState({displayHighlightZone: value, pdfPage: null});
   }
@@ -84,6 +95,7 @@ export default class PdfNotes extends React.Component {
     if(finalStyle){
      var pdfContainer = document.getElementsByClassName("react-pdf__Page__textContent")[0];
      ReactDOM.render(<Highlight styleToPass= {finalStyle} />, pdfContainer);
+     // forcing a rendered component into a the pdf
      this.setState({
         tempHighlight:{finalStyle: finalStyle, page: page},
         pdfPage: page
@@ -92,31 +104,34 @@ export default class PdfNotes extends React.Component {
   }
 
   deleteNote(index){
-    var newNotes = this.state.userHighlights.length >1?  _.cloneDeep(this.state.userHighlights) : [];
+    var newNotes = this.state.userNotes.length >1?  _.cloneDeep(this.state.userNotes) : [];
 
-    newNotes.splice(index +1, this.state.userHighlights.length);
-    this.setState({userHighlights: newNotes});
+    newNotes.splice(index +1, this.state.userNotes.length);
+    this.setState({userNotes: newNotes});
   }
 
   saveHighlight(){
     var textToAdd = this.state.textToAdd;
-    if((textToAdd && textToAdd.length > 0) || this.state.tempHighlight){
-      var highlights = _.cloneDeep(this.state.userHighlights);
 
+    if((textToAdd && textToAdd.length > 0) || this.state.tempHighlight){
+      var notes = _.cloneDeep(this.state.userNotes);
       var brief = textToAdd.length > 10? textToAdd.slice(0,10) +"..." : textToAdd;
+      var page = this.state.tempHighlight? this.state.tempHighlight.page: this.state.pdfPage;
+
+      var newNote = { note: textToAdd,
+                      noteBrief: brief,
+                      page: page
+                    };
 
       if(this.state.tempHighlight){
-        var newHighlight = {page: this.state.tempHighlight.page,
-                          style: this.state.tempHighlight.finalStyle,
-                          note: textToAdd,
-                          noteBrief: brief
-                        };
-        highlights.push(newHighlight);
+        newNote.highlight = _.cloneDeep(this.state.tempHighlight);
+        newNote.style =  _.cloneDeep(this.state.tempHighlight.finalStyle);
+
       }
 
+      notes.push(newNote);
 
-
-      this.setState({userHighlights: highlights,
+      this.setState({userNotes: notes,
                      displayHighlightZone: false,
                      tempHighlight: null,
                      textToAdd: "",
@@ -126,6 +141,12 @@ export default class PdfNotes extends React.Component {
     }
     else{
       this.setState({addNoteError: "*Please make sure to add at least a highlight or text"});
+    }
+  }
+
+  updatePdfPage(page){
+    if(this.state.pdfPage !== page){
+      this.setState({pdfPage: page});
     }
   }
 

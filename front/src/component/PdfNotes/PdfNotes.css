@@ -29,3 +29,17 @@
 .sidePdfNotes{
   margin-top: 32px;
 }
+
+.pdfViewer .react-pdf__Document {
+  margin: auto;
+}
+
+
+@media only screen and (max-width: 767px) {
+  .sidePdfNotes{
+    background: #f6f0ff;
+    border-bottom: 2px solid purple;
+    margin-bottom: 20px;
+  }
+
+}
